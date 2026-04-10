@@ -5,41 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Data Room | WE OUT HERE</title>
   <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    .redacted {
-      background-color: var(--line);
-      color: transparent;
-      user-select: none;
+    .dataroom-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
     }
-    .redacted:hover {
-      background-color: transparent;
-      color: var(--accent-2);
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: sticky;
+      top: 100px;
     }
-    .data-table {
+    .nav-button {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .nav-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(57,255,20,0.1) inset;
+    }
+    .nav-button.active {
+      background: rgba(57, 255, 20, 0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(57,255,20,0.2) inset;
+      font-weight: bold;
+    }
+    .content-area {
+      background: rgba(10, 13, 19, 0.8);
+      border: 1px solid #ff3333;
+      border-radius: 8px;
+      padding: 40px;
+      min-height: 500px;
+      box-shadow: 0 0 30px rgba(255,51,51,0.1);
+    }
+    .markdown-body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      color: var(--accent);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+    .markdown-body h1 { color: #ff3333; font-size: 2rem; margin-top: 0; }
+    .markdown-body table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
+      margin: 24px 0;
       font-family: 'Fira Code', monospace;
       font-size: 0.85rem;
     }
-    .data-table th, .data-table td {
+    .markdown-body th, .markdown-body td {
       border: 1px solid var(--line);
       padding: 12px;
       text-align: left;
     }
-    .data-table th {
-      background: rgba(57, 255, 20, 0.05);
-      color: var(--accent);
+    .markdown-body th { background: rgba(255, 51, 51, 0.1); color: #ff3333; }
+    .markdown-body strong { color: var(--accent-2); }
+    .markdown-body code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85em;
     }
-    .warning-box {
-      border: 1px solid #ff3333;
-      background: rgba(255, 51, 51, 0.05);
+    .markdown-body pre {
+      background: #000;
       padding: 16px;
       border-radius: 4px;
-      color: #ffb3b3;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      margin-bottom: 24px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+    .markdown-body pre code {
+      background: transparent;
+      padding: 0;
+    }
+    .markdown-body blockquote {
+      border-left: 4px solid var(--accent);
+      margin: 0;
+      padding-left: 16px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .markdown-body ul, .markdown-body ol { padding-left: 20px; }
+    
+    @media (max-width: 960px) {
+      .dataroom-layout { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; flex-direction: row; flex-wrap: wrap; }
+      .nav-button { flex: 1 1 auto; text-align: center; }
     }
   </style>
 </head>
@@ -54,79 +124,34 @@
       <a href="casting.html">Casting</a>
       <a href="jobs.html">Jobs</a>
       <a href="partners.html">Partners</a>
-      <a href="data-room.html" style="color: var(--accent); text-shadow: 0 0 8px var(--shadow);">[DATA ROOM]</a>
+      <a href="data-room.html" style="color: #ff3333; text-shadow: 0 0 8px rgba(255,51,51,0.5);">[DATA ROOM]</a>
     </nav>
   </header>
 
   <main>
-    <section class="panel page-hero" style="border-left-color: #ff3333;">
+    <section class="panel page-hero" style="border-left-color: #ff3333; margin-bottom: 24px;">
       <p class="section-label" style="color: #ff3333;">Restricted Access / Level 4</p>
       <h1 style="color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.2);">PROJECT DATA ROOM</h1>
       <p class="lede">Internal production documents, raw risk registers, and canon locks. The things you aren't supposed to see while we're still pretending to be a stable entity.</p>
     </section>
 
-    <div class="warning-box">
-      <strong>WARNING:</strong> The following data reflects live production conditions, actual liabilities, and immutable canon. Do not circulate. Do not use for external PR.
+    <div class="dataroom-layout">
+      <nav class="sidebar">
+        <button class="nav-button" onclick="loadDoc('assumptions', this)">Assumptions</button>
+<button class="nav-button" onclick="loadDoc('canon_lock', this)">Canon Lock</button>
+<button class="nav-button" onclick="loadDoc('master_schedule', this)">Master Schedule</button>
+<button class="nav-button" onclick="loadDoc('partner_materials_index', this)">Partner Materials Index</button>
+<button class="nav-button" onclick="loadDoc('project_glossary', this)">Project Glossary</button>
+<button class="nav-button" onclick="loadDoc('risk_register', this)">Risk Register</button>
+<button class="nav-button" onclick="loadDoc('studio_manifest', this)">Studio Manifest</button>
+
+      </nav>
+      <div class="content-area">
+        <div id="markdown-viewer" class="markdown-body">
+          <h2>Select a document from the left to view the internal production source of truth.</h2>
+        </div>
+      </div>
     </div>
-
-    <section class="panel">
-      <h2>Document ID: WOH-ADMIN-000 (CANON LOCK)</h2>
-      <p class="section-label">Status: IMMUTABLE</p>
-      <p>This is the single source of truth for the television project. Every deliverable, script, marketing asset, legal document, and internal memo produced for this project must conform to the values defined here.</p>
-      
-      <table class="data-table">
-        <tr><th>Field</th><th>Canon Value</th><th>Notes</th></tr>
-        <tr><td><strong>Format</strong></td><td>6 episodes × 30 minutes</td><td>Exactly six. Not five, not eight.</td></tr>
-        <tr><td><strong>Genre</strong></td><td>Dark sitcom / tech psychocomedy</td><td>Both terms required.</td></tr>
-        <tr><td><strong>Style</strong></td><td>Desktop realism + live action + surreal inserts</td><td>Three components, always listed together.</td></tr>
-      </table>
-
-      <h3 style="margin-top: 24px;">The Three Handles</h3>
-      <p>There are exactly three main characters. They are identified by their handles, not by real names. Real names are <span class="redacted">classified</span>.</p>
-      <ul style="font-family: 'Fira Code', monospace; color: var(--accent-2);">
-        <li>twinkle.puss</li>
-        <li>bl0ng</li>
-        <li>ariane.emory</li>
-      </ul>
-    </section>
-
-    <section class="panel" style="border-left-color: #ff3333;">
-      <h2>Document ID: WOH-ADMIN-004 (RISK REGISTER)</h2>
-      <p class="section-label">Responsible Agent: ops_agent</p>
-      <p>This document identifies, assesses, and tracks all known risks to the WE OUT HERE production. Every risk is scored, assigned an owner, and paired with a mitigation strategy.</p>
-      
-      <h3 style="margin-top: 24px; color: #ff3333;">Top 5 Active Production Risks</h3>
-      <table class="data-table">
-        <tr><th>Rank</th><th>ID</th><th>Risk Description</th><th>Severity Score</th><th>Owner</th></tr>
-        <tr><td>1</td><td>R-FIN-001</td><td>Funding gap (Incomplete runway for production)</td><td style="color: #ff3333; font-weight: bold;">20 / CRITICAL</td><td>finance_agent + EP</td></tr>
-        <tr><td>2</td><td>R-CRE-002</td><td>Script delays impacting pre-production timeline</td><td style="color: #ff9933; font-weight: bold;">16 / HIGH</td><td>showrunner</td></tr>
-        <tr><td>3</td><td>R-FIN-003</td><td>Cash flow crunch during principal photography</td><td style="color: #ff9933; font-weight: bold;">16 / HIGH</td><td>finance_agent</td></tr>
-        <tr><td>4</td><td>R-ORG-001</td><td>Principal burnout / Psychological collapse of core team</td><td style="color: #ff9933; font-weight: bold;">16 / HIGH</td><td>ops_agent</td></tr>
-        <tr><td>5</td><td>R-CRE-001</td><td>Tone failure (Show becomes generic tech satire instead of psychocomedy)</td><td style="color: #ff9933; font-weight: bold;">15 / HIGH</td><td>showrunner</td></tr>
-      </table>
-      <p style="margin-top: 12px; font-size: 0.85em; color: var(--muted); font-style: italic;">* Risk R-ORG-001 is currently tracking above baseline. The irony of the production team burning out while making a show about startup burnout is noted, but does not mitigate the liability.</p>
-    </section>
-
-    <section class="panel">
-      <h2>Document ID: WOH-ADMIN-005 (PROJECT GLOSSARY EXCERPT)</h2>
-      <p class="section-label">Internal Terminology</p>
-      
-      <dl class="facts" style="grid-template-columns: 1fr;">
-        <div style="margin-bottom: 8px;">
-          <dt style="color: var(--accent);">CONTAINMENT FAILURE</dt>
-          <dd>When internal group pathology leaks into the public or professional sphere. The primary narrative engine of Season 1.</dd>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <dt style="color: var(--accent);">DESKTOP REALISM</dt>
-          <dd>Production style where screen recordings (Discord, Slack, iMessage) are treated as primary dramatic spaces, not just cutaways.</dd>
-        </div>
-        <div style="margin-bottom: 8px;">
-          <dt style="color: var(--accent);">THE MANIC DEFENSE</dt>
-          <dd>Using speed, volume, and hustle to outrun shame or consequences. A core operating principle for Cataclysm Consulting.</dd>
-        </div>
-      </dl>
-    </section>
-
   </main>
 
   <footer class="site-footer">
@@ -136,8 +161,1831 @@
     <div class="footer-links">
       <a href="about.html">About</a>
       <a href="press.html">Press</a>
-      <a href="data-room.html" style="color: var(--accent);">Data Room</a>
+      <a href="data-room.html" style="color: #ff3333;">Data Room</a>
     </div>
   </footer>
+
+  <script type="text/markdown" id="raw-assumptions">
+# WE OUT HERE — Working Assumptions Register
+
+**Document ID:** WOH-ADMIN-003  
+**Version:** 1.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Responsible Agent:** ops_agent  
+**Status:** Draft  
+**Classification:** Internal — All Principals
+
+---
+
+## Purpose
+
+This document records **every working assumption** underlying the WE OUT HERE project. Assumptions are categorized by department and tagged by confidence level:
+
+| Tag | Meaning | Implication |
+|---|---|---|
+| **FIRM** | High confidence; based on canon lock, signed agreements, or principal decisions already made | Treat as fact unless formally revised |
+| **SOFT** | Reasonable estimate; based on industry norms, comparable projects, or informed judgment | Plan around it, but validate before committing resources |
+| **PLACEHOLDER** | Speculative or TBD; included to prevent planning gaps | Must be replaced with FIRM or SOFT values before entering relevant wave |
+
+**Governance:** Assumptions should be reviewed at every wave gate. When an assumption is validated, it graduates to a decision (logged in the relevant deliverable). When an assumption is invalidated, ops_agent flags downstream impact and triggers replanning.
+
+**Canon Reference:** All assumptions must be consistent with `00_admin/canon_lock.md` (WOH-ADMIN-000). Where this document elaborates on canon values, the canon lock takes precedence on any point of conflict.
+
+---
+
+## §1 — Creative Assumptions
+
+### 1.1 Format & Structure
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-CRE-001 | Season 1 is 6 episodes × 30 minutes | **FIRM** | canon_lock.md §1.1 | Immutable canon. Not negotiable. |
+| A-CRE-002 | Single-camera production style (not multi-cam, not hybrid cam setups) | **FIRM** | canon_lock.md §1.1 | Defines blocking, lighting design, and edit grammar |
+| A-CRE-003 | ~30–40% of total screen time is screenlife/desktop realism content | **SOFT** | Production estimate | May shift per episode; some episodes heavier on UI (e.g., S01E01 "Don't Send That" likely skews higher), others heavier on live action |
+| A-CRE-004 | ~50–60% of total screen time is traditional live-action single-cam coverage | **SOFT** | Production estimate | Complementary to A-CRE-003; these two percentages plus surreal inserts should total ~100% |
+| A-CRE-005 | ~10% of total screen time is surreal insert sequences (stylized, VFX-heavy) | **SOFT** | Production estimate | Budget-sensitive; could be reduced to 5% if VFX costs exceed projections |
+| A-CRE-006 | Each episode has a distinct A-story and at least one B-story thread | **SOFT** | Writers' room convention | To be confirmed during story breaks |
+| A-CRE-007 | Cold opens are standard for every episode | **SOFT** | Format assumption | Per deliverable `02_scripts/cold_opens.md`; may be adjusted per showrunner |
+| A-CRE-008 | The show's fictional chat platform is `Backchannel`, not Discord, and will have a unique UI | **FIRM** | canon_lock.md §1.3 | `Backchannel` is the in-world platform name; UI design is a brand_agent deliverable |
+| A-CRE-009 | The fictional consultancy is working-titled "Cataclysm Consulting" | **SOFT** | canon_lock.md §2 | May change during writers' room; requires showrunner approval to alter |
+| A-CRE-010 | No fourth main character will be introduced in Season 1 | **FIRM** | canon_lock.md §1.2 | Exactly three main characters. Recurring/guest characters are permitted but are not main cast. |
+| A-CRE-011 | Season arc is a one-way ratchet — instability accumulates, no resets | **FIRM** | canon_lock.md §1.5 | Load-bearing structural principle |
+| A-CRE-012 | Comedy derives from defense mechanisms, labor anxiety, and failed containment — not sitcom contrivance | **FIRM** | canon_lock.md §1.8 | Writerly constraint; enforced in all scripts |
+
+### 1.2 Writers' Room
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-CRE-013 | Writers' room will consist of 4–6 writers including the showrunner/head writer | **SOFT** | Industry norm for indie-budget 6-episode series | Could be as small as 3 if budget requires; showrunner may solo-write with a story editor |
+| A-CRE-014 | Writers' room operates for approximately 8–12 weeks pre-production | **SOFT** | Standard room duration for short-order season | Overlaps with Wave 2 (Creative Build) |
+| A-CRE-015 | All writers will sign IP assignment and NDA agreements before room commencement | **FIRM** | Legal requirement | Per `11_legal/ip_assignment_template.md` and `11_legal/nda_template.md` |
+| A-CRE-016 | Story breaks will be completed for all 6 episodes before any script goes to full draft | **SOFT** | Best practice | Showrunner may choose to break and write in parallel |
+| A-CRE-017 | At least one table read per episode will occur before production | **SOFT** | Standard quality gate | Logistics TBD; may be remote |
+
+### 1.3 Tone & Audience
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-CRE-018 | Target audience is adults 22–45, internet-literate, tech-adjacent or tech-aware | **SOFT** | Marketing estimate | To be validated by marketing_agent in `05_marketing/audience_profile.md` |
+| A-CRE-019 | Content rating equivalent: TV-MA or strong TV-14 (language, thematic content, no explicit sexual content or graphic violence) | **SOFT** | Tone estimate | Rating affects platform eligibility; to be confirmed by distribution_agent |
+| A-CRE-020 | The show will not require intimacy coordination (no sex scenes) | **SOFT** | Creative assumption based on current tone | If scripts evolve to include intimacy, this assumption must be revised and budget/crew adjusted |
+
+---
+
+## §2 — Production Assumptions
+
+### 2.1 Schedule
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-PRD-001 | Target production start: Q3 2026 (July–September) | **SOFT** | canon_lock.md §2 | Depends on financing close and cast attachment; currently a soft lock |
+| A-PRD-002 | 4–5 shooting days per episode | **SOFT** | Industry norm for indie 30-min single-cam | Some episodes may need 6 days if heavy on locations or surreal inserts |
+| A-PRD-003 | Total shoot days: approximately 25–30 for the full season | **SOFT** | Derived from A-PRD-002 × 6 episodes | Block shooting may optimize this |
+| A-PRD-004 | Block shooting across episodes will be used where possible | **SOFT** | Efficiency assumption | Requires shooting schedule to be designed around location consolidation |
+| A-PRD-005 | 5-day shooting weeks (Mon–Fri); no planned weekend shoots | **SOFT** | Crew welfare standard | Overtime/weekend shoots may be needed for weather or schedule recovery |
+| A-PRD-006 | 12-hour maximum shooting days with mandatory turnaround | **FIRM** | SAG-AFTRA and standard crew safety requirements | Non-negotiable regardless of union status |
+| A-PRD-007 | Pre-production period: approximately 8–10 weeks before principal photography | **SOFT** | Industry norm | Includes casting, location scouting, set construction, tech prep |
+| A-PRD-008 | Principal photography wraps by end of Q3 2026 or early Q4 2026 | **SOFT** | Derived from A-PRD-001 + A-PRD-003 | Depends on actual start date |
+
+### 2.2 Locations & Sets
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-PRD-009 | 2–3 standing sets will be built or dressed for recurring locations | **SOFT** | Production design estimate | Likely: main living/work space, secondary character space, a communal/public space |
+| A-PRD-010 | 3–5 practical locations will be used across the season | **SOFT** | Production estimate | Coffee shops, co-working spaces, client offices, outdoor locations |
+| A-PRD-011 | No international locations required | **SOFT** | Script assumption | All action takes place in a single U.S. metro area (city TBD) |
+| A-PRD-012 | Production will be based in a single metro area (likely NYC, LA, Atlanta, or a tax-incentive state) | **PLACEHOLDER** | To be determined by finance_agent + production_agent | Tax incentives may drive this decision; see A-FIN-010 |
+| A-PRD-013 | Standing sets will be built on a stage or in a converted warehouse/industrial space, not on a traditional studio lot | **SOFT** | Budget-driven assumption | Full studio lot rental likely exceeds budget |
+
+### 2.3 Crew & Equipment
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-PRD-014 | Core crew size: approximately 30–40 people during principal photography | **SOFT** | Industry norm for indie-to-lower-mid single-cam | Skeleton crew for screenlife capture days may be as small as 8–12 |
+| A-PRD-015 | Camera package: digital cinema (likely RED, ARRI, or Sony FX series) | **SOFT** | Standard for indie narrative | Final selection depends on DP preference and rental deals |
+| A-PRD-016 | Screenlife/desktop content will be captured via dedicated screen-recording pipeline, not simulated in post | **SOFT** | Production design principle per canon_lock.md §1.8.2 | "If you can't shoot it as a real screen recording, redesign it" |
+| A-PRD-017 | A dedicated UI/UX designer will be on the creative team to build the fictional chat platform interface | **SOFT** | Required for screenlife production quality | May be contracted rather than full-time crew |
+| A-PRD-018 | Surreal insert sequences will require a small VFX team (2–4 artists) or outsourced VFX vendor | **SOFT** | Based on ~10% surreal content ratio | Scope depends on final script requirements |
+| A-PRD-019 | No stunt coordinator required unless scripts call for physical comedy beyond standard blocking | **SOFT** | Based on current creative direction | Revisit after story breaks |
+
+---
+
+## §3 — Post-Production Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-POST-001 | Editorial timeline: 8–10 weeks per episode, with overlapping schedules across episodes | **SOFT** | Industry norm for indie series with VFX components | Episode 1 enters post first; subsequent episodes overlap by 2–3 weeks |
+| A-POST-002 | Total post-production period: approximately 16–22 weeks for the full season | **SOFT** | Derived from overlapping editorial schedules | Includes edit, VFX, sound, color, final QC |
+| A-POST-003 | Editor will work with a single assistant editor | **SOFT** | Budget assumption | May need additional AE support during VFX-heavy episodes |
+| A-POST-004 | Sound design will include: dialogue editing, foley, ambient design, UI sound effects (notification chimes, typing, scrolling), and mix | **SOFT** | Required by hybrid format | UI sounds are critical to screenlife immersion |
+| A-POST-005 | Original score will be composed (not entirely library/stock music) | **SOFT** | Creative ambition | Budget may dictate hybrid approach: original themes + licensed/library cues |
+| A-POST-006 | Color grade will be performed by an external colorist, not in-house | **SOFT** | Industry standard | Budgeted as post-production line item |
+| A-POST-007 | VFX for surreal inserts will be completed by a boutique VFX house or freelance team, not a major facility | **SOFT** | Budget constraint | Scope to be defined in `13_post/vfx_breakdown.md` |
+| A-POST-008 | Final deliverables will conform to platform-standard specs (ProRes, H.264/H.265, various aspect ratios) | **SOFT** | Distribution requirement | Specific specs depend on acquisition platform; see `13_post/deliverables_spec.md` |
+| A-POST-009 | Closed captions and subtitles will be produced for all episodes | **FIRM** | Accessibility and platform requirement | English captions at minimum; additional languages TBD based on distribution |
+| A-POST-010 | Target delivery of completed season: Q1–Q2 2027 | **SOFT** | Derived from production start Q3 2026 + post timeline | Critical date for festival submission windows |
+
+---
+
+## §4 — Financial Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-FIN-001 | Total season budget range: $1.5M–$3M | **SOFT** | Estimate based on comparable indie series (e.g., early-season HIGH MAINTENANCE, JOE PERA, RAMY pilot) | This is a planning range, not a locked number. Actual budget depends on financing commitments. |
+| A-FIN-002 | Per-episode budget: approximately $250K–$500K | **SOFT** | Derived from A-FIN-001 ÷ 6 | Episodes with heavier VFX or more locations will cost more |
+| A-FIN-003 | Above-the-line costs (writers, director, cast, producers): approximately 25–35% of total budget | **SOFT** | Industry norm for indie/lower-mid | Highly dependent on cast attachments and whether showrunner is also director |
+| A-FIN-004 | Below-the-line production costs: approximately 40–50% of total budget | **SOFT** | Industry norm | Includes crew, equipment, locations, set construction, catering, transport |
+| A-FIN-005 | Post-production costs: approximately 15–25% of total budget | **SOFT** | Industry norm; higher end due to VFX and screenlife pipeline | VFX budget is the primary variable |
+| A-FIN-006 | Marketing and distribution costs: approximately 5–10% of total budget (or separate from production budget entirely) | **PLACEHOLDER** | Depends on distribution model | If acquired by a streamer, platform handles marketing; if self-distributed, this line item grows significantly |
+| A-FIN-007 | Financing will come from a combination of: private equity/angel investment, production grants, tax incentives, and/or platform pre-sale | **SOFT** | Indie financing norm | See `10_finance/funding_strategy.md` for detailed plan |
+| A-FIN-008 | No single investor will hold majority ownership of the production entity | **SOFT** | Governance assumption | Subject to operating agreement terms |
+| A-FIN-009 | Cash flow will require bridge financing or credit facility during production gap between investor commitments and platform payments | **SOFT** | Common indie cash flow challenge | finance_agent to model in `10_finance/cashflow_projection.md` |
+| A-FIN-010 | Production will pursue state tax incentives (e.g., Georgia, New Mexico, New Jersey, New York) | **SOFT** | Standard cost-reduction strategy | Incentive availability may drive location decision (see A-PRD-012) |
+| A-FIN-011 | Contingency buffer: 10% of total budget held as contingency | **SOFT** | Industry standard | Critical for indie production where overruns have outsized impact |
+| A-FIN-012 | All cast and crew will be paid; this is not a deferred-pay or spec project | **FIRM** | Ethical and legal requirement | Rates may be indie-scaled, but no unpaid labor |
+
+---
+
+## §5 — Legal Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-LEG-001 | Production entity: Out Here Productions LLC (Delaware) | **SOFT** | canon_lock.md §2 | Entity has NOT been formed yet. All references are provisional. Formation must precede any contractor engagement. |
+| A-LEG-002 | LLC will be managed by 1–2 managing members (showrunner + EP) | **SOFT** | Standard indie structure | Per `studio_manifest.md` §2 |
+| A-LEG-003 | Union status: SAG-AFTRA New Media agreement or comparable indie framework for above-the-line talent | **SOFT** | Assumed based on target cast quality and platform expectations | New Media agreement allows reduced rates and modified terms for qualifying projects |
+| A-LEG-004 | Below-the-line crew: non-union possible, depending on production state and budget | **SOFT** | Common for indie-budget productions | IATSE engagement would significantly increase BTL costs; decision depends on location and crew availability |
+| A-LEG-005 | All contributors (writers, cast, crew, contractors) will execute IP assignment or work-for-hire agreements | **FIRM** | Legal requirement for clean chain of title | No work commences without signed agreements |
+| A-LEG-006 | E&O (errors and omissions) insurance will be obtained before production | **FIRM** | Required for distribution | Platform acquisition almost universally requires E&O policy in place |
+| A-LEG-007 | General liability and production insurance (workers' comp, equipment, location) will be obtained | **FIRM** | Legal and practical requirement | Standard production insurance package |
+| A-LEG-008 | All real-world brand references in scripts will be cleared or fictionalized | **SOFT** | Standard legal practice | The show satirizes tech culture — real company names, logos, and products must be treated carefully |
+| A-LEG-009 | The fictional chat platform will be designed to avoid trade dress claims from Discord, Slack, or similar platforms | **SOFT** | Legal risk mitigation | UI design must be "inspired by" without being "confusingly similar to" |
+| A-LEG-010 | Music licensing will be a mix of original score, commissioned tracks, and cleared library music — no unlicensed needle drops | **SOFT** | Budget and legal constraint | Needle drops from recognizable artists likely exceed budget |
+| A-LEG-011 | NDAs will be executed with all personnel who access scripts, story materials, or unreleased content | **FIRM** | Standard practice | Per `11_legal/nda_template.md` |
+| A-LEG-012 | The operating agreement will include provisions for IP ownership, profit participation, decision-making authority, and dissolution | **FIRM** | Standard LLC governance | Per `11_legal/operating_agreement.md` |
+
+---
+
+## §6 — Distribution & Marketing Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-DST-001 | Primary distribution strategy: festival premiere → streamer acquisition | **SOFT** | Standard indie prestige path | Festivals provide press, validation, and buyer attention |
+| A-DST-002 | Backup distribution strategy: direct digital release (TVOD/SVOD self-distribution) | **SOFT** | Contingency if platform acquisition does not materialize | Lower revenue ceiling but maintains creative control |
+| A-DST-003 | Target festivals: Sundance, SXSW, Tribeca, SeriesFest, Series Mania (TV-specific festivals prioritized) | **SOFT** | Based on format and tone | Submission deadlines drive post-production timeline |
+| A-DST-004 | Platform targets: Hulu, FX on Hulu, Adult Swim/Max, Peacock, Amazon Freevee, Apple TV+, Roku Channel | **PLACEHOLDER** | Based on comparable acquisitions | To be refined by distribution_agent in `14_distribution/platform_targets.md` |
+| A-DST-005 | A pilot episode or sizzle reel may be produced as proof-of-concept before full financing | **SOFT** | Common indie strategy | Could accelerate attachment of cast and financing partners |
+| A-DST-006 | International distribution is secondary; domestic is priority for Season 1 | **SOFT** | Standard for first-season indie series | International sales may be pursued post-domestic deal |
+| A-DST-007 | Marketing will lean heavily on social media, meme culture, and internet-native channels | **SOFT** | Aligned with show's audience and tone | Traditional advertising likely not in budget |
+| A-DST-008 | A project website will be built as a marketing/press hub before festival premiere | **SOFT** | Standard practice | Per `07_website/website_spec.md` |
+| A-DST-009 | Press strategy will target tech media, comedy media, and indie film press — not mainstream entertainment outlets initially | **SOFT** | Audience-aligned PR | See `06_press_kit/press_kit.md` |
+
+---
+
+## §7 — Organizational & Operational Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-ORG-001 | The project is managed by a small founding team (1–3 principals) with authority over all creative and business decisions | **SOFT** | Per studio_manifest.md §1 | Principal names TBD pending formal attachment |
+| A-ORG-002 | All project documentation is maintained in markdown, stored in the project repository | **FIRM** | Per studio_manifest.md §7.1 | Standard enforced by ops_agent and qc_agent |
+| A-ORG-003 | 19 subagents are defined in the studio manifest; not all require human staffing (some are agent roles) | **FIRM** | Per studio_manifest.md §4 | Agent model may evolve but the scope boundaries are fixed |
+| A-ORG-004 | Wave-based production schedule with 4 waves across approximately 22 weeks of document production | **SOFT** | Per studio_manifest.md §5 | Wave timing may shift based on dependencies and blockers |
+| A-ORG-005 | Communication flows through ops_agent as central coordinator; no ad-hoc inter-agent communication | **FIRM** | Per studio_manifest.md §6.1 | Prevents coordination failure and contradictory decisions |
+| A-ORG-006 | The project will use standard indie-production tools: Google Workspace or equivalent for collaboration, Final Draft or equivalent for scripts, Frame.io or equivalent for review, Slack or equivalent for real-time communication | **PLACEHOLDER** | Tool stack not yet defined | To be specified in `16_ops/tool_stack.md` |
+| A-ORG-007 | All deliverables will go through a QC and continuity review before approval | **FIRM** | Per studio_manifest.md §10.2 | Enforced at wave gates |
+| A-ORG-008 | Key creative roles (showrunner, director, DP, editor) may be consolidated — e.g., showrunner may also direct some or all episodes | **SOFT** | Common at this budget level | Reduces headcount and cost but increases individual workload |
+| A-ORG-009 | Remote collaboration will be used extensively during development and pre-production; production itself requires physical co-location | **SOFT** | Practical reality for indie production | Writers' room may be remote; set requires presence |
+
+---
+
+## §8 — Web & Technology Assumptions
+
+| ID | Assumption | Confidence | Source | Notes |
+|---|---|---|---|---|
+| A-WEB-001 | A project website will be built as a static or semi-static site (not a complex web application) | **SOFT** | Budget and scope assumption | Landing page + press kit + contact; not a content platform |
+| A-WEB-002 | The fictional chat platform UI will be built as a functional prototype for screen capture, not just a mockup | **SOFT** | Production requirement per A-CRE-016 | Requires front-end development; may use Electron, web app, or similar |
+| A-WEB-003 | Screen capture content will be produced at native resolution (likely 1920×1080 or 2560×1440) for clean integration with live-action footage | **SOFT** | Technical requirement | Resolution must match or exceed final delivery specs |
+| A-WEB-004 | Social media accounts will be created for the show (Instagram, TikTok, X/Twitter, possibly Bluesky) | **SOFT** | Marketing assumption | Handles should be secured early even if accounts are dormant initially |
+| A-WEB-005 | In-universe social media and web content may be created as marketing assets (e.g., "leaked" chats, character posts) | **PLACEHOLDER** | Creative marketing idea | Depends on marketing strategy; see `05_marketing/social_media_plan.md` |
+
+---
+
+## §9 — Assumption Dependencies & Critical Chains
+
+The following assumptions are **load-bearing** — if they are invalidated, they trigger cascading replanning across multiple departments:
+
+| Critical Assumption | If Invalidated… | Departments Affected |
+|---|---|---|
+| **A-FIN-001** (Budget range $1.5M–$3M) | Entire production plan, crew size, shoot days, VFX scope, post timeline, and distribution strategy must be rescaled | ALL |
+| **A-PRD-001** (Production start Q3 2026) | Wave schedule, crew availability, festival submission windows, and delivery timeline all shift | Production, Post, Distribution, Marketing, Ops |
+| **A-LEG-001** (Entity formation as Delaware LLC) | All contracts, bank accounts, insurance, and IP ownership structures must be restructured | Legal, Finance, HR |
+| **A-LEG-003** (SAG-AFTRA New Media) | Cast budget, contract terms, residuals structure, and potentially cast pool all change | Legal, Finance, Casting, Production |
+| **A-PRD-012** (Single metro production base) | Location plan, crew sourcing, tax incentives, and logistics all change | Production, Finance, HR |
+| **A-CRE-003** (30–40% screenlife) | VFX pipeline, UI design scope, post workflow, and potentially editorial timeline all shift | Production, Post, Brand |
+| **A-DST-001** (Festival → streamer path) | Marketing timeline, delivery deadlines, and revenue projections all change | Distribution, Marketing, Finance |
+
+---
+
+## §10 — Assumption Review Schedule
+
+| Review Point | Timing | Scope | Owner |
+|---|---|---|---|
+| **Wave 1 Gate** | End of Week 3 | Validate all §1 (Creative), §5 (Legal), and §7 (Org) assumptions | ops_agent + showrunner |
+| **Wave 2 Gate** | End of Week 8 | Validate all §4 (Financial), §6 (Distribution), and remaining §2 (Production) assumptions | ops_agent + EP + finance_agent |
+| **Wave 3 Gate** | End of Week 14 | Final validation of all assumptions before production commitment (GO/NO-GO) | All principals |
+| **Production Wrap** | Post-shoot | Post-production assumptions validated against actual footage and pipeline capacity | ops_agent + post_agent |
+| **Delivery** | Pre-delivery | Distribution and marketing assumptions validated against actual market conditions | ops_agent + distribution_agent |
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| 1.0.0 | 2026-04-10 | ops_agent | Initial creation — 60+ assumptions across 8 departments, dependency chain, review schedule |
+
+---
+
+*This document tracks what we believe to be true. Beliefs are not facts until validated. Review early, review often, and flag the moment something stops being true.*
+
+</script>
+<script type="text/markdown" id="raw-canon_lock">
+# WE OUT HERE — Canon Lock
+
+**Document ID:** WOH-ADMIN-000  
+**Version:** 1.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Authority:** showrunner_agent  
+**Status:** LOCKED  
+**Classification:** CANON — IMMUTABLE UNLESS AMENDED PER §6
+
+---
+
+## Purpose & Authority
+
+This document is the **single source of truth** for the television project WE OUT HERE.
+
+Every deliverable, script, marketing asset, legal document, press release, and internal memo produced for this project must conform to the values defined here. If any document anywhere in the project contradicts this file, **that document is wrong** — not this one.
+
+`canon_lock.md` supersedes `studio_manifest.md`, `series_bible.md`, `character_bible.md`, `tone_guide.md`, and all other project documents on any point where they conflict. Those documents may elaborate on canon, but they may not contradict it.
+
+No agent may override, reinterpret, or "creatively adjust" the values in §1 without following the Amendment Protocol in §6.
+
+---
+
+## §1 — Immutable Canon
+
+### 1.1 Project Identity
+
+| Field | Canon Value | Notes |
+|---|---|---|
+| **Title** | WE OUT HERE | All caps. No punctuation. No subtitle. No colon. No tagline appended. |
+| **Format** | 6 episodes × 30 minutes, Season 1 | Exactly six. Not five, not eight. Thirty minutes each. |
+| **Genre** | Single-camera dark sitcom / tech psychocomedy | Both terms required when describing genre. |
+| **Production Style** | Hybrid — desktop realism + live action + surreal insert sequences | Three components, always listed together. |
+| **Logline** | Three burned-out technologists launch a chaotic AI consultancy from a Discord-like group chat and try to bootstrap legitimacy through manic hustle, irony, pseudo-legal improvisation, and memes. Their friendship becomes the failed holding environment that keeps the company alive while making everyone less stable. | Verbatim. Do not paraphrase in canon-facing documents. |
+
+### 1.2 Characters
+
+There are exactly **three** main characters. They are identified by their handles, not by real names (real names have not been locked). Handles are always lowercase, always include punctuation as shown, and are never abbreviated.
+
+| Handle | Archetype | Canonical Description |
+|---|---|---|
+| **twinkle.puss** | The impulsive visionary | Male. Hypomanic, grandiose, charismatic, erratic, hungry for legitimacy, terrified of economic precarity, always one decision away from a lawsuit. |
+| **bl0ng** | The failed superego | A moral realist who sees the danger clearly but hides all real concern inside irony, sarcasm, reaction GIF logic, and passive-aggressive one-liners. |
+| **ariane.emory** | The detached meta-observer | Hyper-articulate, dissociated, aesthetically motivated, more comfortable processing people as systems than relating to them directly. |
+
+**Handle formatting rules:**
+- `twinkle.puss` — lowercase, period between words, no capital letters
+- `twinkle.puss` is male; use he/him pronouns in all narrative, character, casting, and script materials unless a specific joke or in-universe misread is intentionally dramatized
+- `bl0ng` — lowercase, zero (not the letter O) in place of the second character
+- `ariane.emory` — lowercase, period between words, no capital letters
+- Never rendered as `Twinkle.Puss`, `Bl0ng`, `Ariane.Emory`, `TWINKLE.PUSS`, `BL0NG`, `ARIANE.EMORY`, or any other casing
+- Never abbreviated to `twinkle`, `puss`, `bl`, `ariane`, `emory`, etc. in canon references (in-universe dialogue may use nicknames if dramatically motivated)
+
+### 1.3 Their Company
+
+| Field | Value | Lock Status |
+|---|---|---|
+| **Company Name** | Working title: "Cataclysm Consulting" (or similar absurd AI consultancy name) | **SOFT LOCK** — see §2 |
+| **Platform** | Backchannel | **HARD LOCK** — it is a fictional Discord-like group chat platform. It is never literally "Discord," and materials should use `Backchannel` for in-world references. |
+
+### 1.4 Tone
+
+Canon tone is defined by the following attributes, all of which must be present:
+
+- **Smart, internet-literate, psychologically sharp, humane, and darkly funny**
+- **Absurdist but emotionally grounded**
+- **Discord realism, startup satire, labor anxiety, failed intimacy, legal comedy, meme surrealism**
+
+**Comp frame:** Prestige indie sitcom + startup collapse comedy + psychoanalytic group chat theater.
+
+### 1.5 Season Arc
+
+The six-beat season arc, in exact order:
+
+> **Mania → fragile success → ethical drift → containment failure → ironic collapse → exposure to consequences**
+
+Each beat maps to one episode. The arc is a one-way ratchet — the show does not reset to stability between episodes. Instability accumulates.
+
+### 1.6 Episode List
+
+| Episode | Code | Title (exact) | Arc Position |
+|---|---|---|---|
+| 1 | S01E01 | "Don't Send That" | Mania / inciting chaos |
+| 2 | S01E02 | "Terms of Abuse" | Fragile success / false legitimacy |
+| 3 | S01E03 | "The Manic Defense" | Ethical drift / psychological escalation |
+| 4 | S01E04 | "Contain Me Daddy" | Containment failure / cracks visible |
+| 5 | S01E05 | "The Superego Collapse" | Ironic collapse / moral infrastructure fails |
+| 6 | S01E06 | "Let Him Cook()" | Exposure to consequences / reckoning |
+
+**Title formatting rules:**
+- Titles always appear in quotation marks when referenced in text.
+- Episode 6 includes parentheses as part of the title: `"Let Him Cook()"` — not `"Let Him Cook"`.
+- Titles are never abbreviated, never reformatted, never altered (no "Don't Send It", no "Terms of Service", no "Let Him Cook ()").
+- When referencing episodes by code, use format `S01E01` — not `1x01`, not `Ep. 1`, not `Episode One`.
+
+### 1.7 Production Assumptions
+
+| Field | Value | Lock Status |
+|---|---|---|
+| **Budget Tier** | Indie-to-lower-mid-budget professional production | HARD LOCK (tier, not dollar amount) |
+| **Target Platforms** | Streamers, festivals, digital-first release | HARD LOCK |
+| **Production Entity** | Out Here Productions LLC (Delaware) | SOFT LOCK — see §2 |
+| **Target Production Start** | Q3 2026 | SOFT LOCK — see §2 |
+
+### 1.8 Writerly Constraints (Canon-Level)
+
+These are not suggestions. They are load-bearing rules that define what the show is.
+
+1. **Comedy must emerge from defense mechanisms, labor anxiety, and failed containment.** Not from wacky misunderstandings, not from characters being stupid, not from sitcom contrivance. The humor is psychological.
+
+2. **Chat UI and screenlife components must be producible, not novelistic.** If you can't shoot it as a real screen recording, redesign it. No "the chat scrolls through 200 messages while orchestral music plays" unless you can actually build and film that interface.
+
+3. **No moralizing speeches that dissolve the comedy.** Characters may have insights, but the show does not pause to lecture the audience. If a character delivers a monologue about What It All Means, the show must undercut it — either immediately or within the scene.
+
+4. **Every episode must have at least one emotionally true moment hidden inside a joke sequence.** The audience should feel something real in every episode, but the show should never announce that it's being sincere.
+
+5. **Endings preserve instability rather than resolve cleanly.** No episode ends with the group having Learned A Lesson. Problems compound. Partial wins create new problems. The season finale is not redemption — it is exposure to consequences.
+
+6. **The trio's psychodynamic logic must be preserved at all times.** twinkle.puss is not "the fun one." bl0ng is not "the smart one." ariane.emory is not "the weird one." They are defined by their psychological defense structures, and those structures must drive their behavior in every scene.
+
+---
+
+## §2 — Soft Locks
+
+Soft locks are values that are currently assumed and should be treated as canon by default, but may be changed with approval from the showrunner + ops_agent. Changing a soft lock does not require a full amendment — it requires a documented decision logged in the Version History of this file.
+
+| Item | Current Value | Rationale | Change Requires |
+|---|---|---|---|
+| **Company Name** | "Cataclysm Consulting" (working title) | Not yet creatively locked. May change during writers' room. | Showrunner approval |
+| **Fictional Chat Platform Name** | Backchannel | Locked after canon reconciliation pass for cross-package consistency. | Showrunner + ops_agent approval |
+| **Production Entity Name** | Out Here Productions LLC | Provisional; depends on legal formation decisions. | Showrunner + EP approval |
+| **Production Entity Jurisdiction** | Delaware LLC | Standard indie choice; may change based on principal locations. | EP + legal_agent approval |
+| **Target Production Start** | Q3 2026 | Assumption; depends on financing and attachment timeline. | EP approval |
+| **Budget Range** | Not yet specified (indie-to-lower-mid tier locked) | Dollar amounts to be determined by finance_agent. | EP + finance_agent approval |
+| **Creators / Key Principals** | TBD | Not yet formally attached. | Showrunner decision |
+
+---
+
+## §3 — Canon Enforcement Rules
+
+Every deliverable must be checked against this file before it is marked as Review, Approved, or Final. The following rules govern enforcement:
+
+### 3.1 Who Enforces
+
+| Role | Responsibility |
+|---|---|
+| **showrunner_agent** | Final authority on all canon disputes. Owns this document. |
+| **continuity_agent** | Audits all deliverables for canon compliance at wave gates. |
+| **qc_agent** | Checks formatting, cross-references, and surface-level canon conformance. |
+| **ops_agent** | Logs violations, routes disputes, and maintains amendment records. |
+| **Every agent** | Responsible for self-checking their own deliverables against this file before submitting for review. |
+
+### 3.2 How to Check a Deliverable
+
+Run the following checklist against any document before submission:
+
+| # | Check | How to Verify |
+|---|---|---|
+| 1 | **Title correct?** | Show title appears as `WE OUT HERE` (all caps, no punctuation, no subtitle). |
+| 2 | **Character handles correct?** | All three handles appear in exact lowercase with correct punctuation: `twinkle.puss`, `bl0ng`, `ariane.emory`. |
+| 3 | **Character descriptions accurate?** | No character is described in a way that contradicts their canonical archetype and psychological profile in §1.2. |
+| 4 | **Episode titles exact?** | Every episode title matches §1.6 exactly, including punctuation and parentheses. |
+| 5 | **Episode count correct?** | Season 1 is 6 episodes × 30 minutes. Not 8, not 10, not "approximately 30 minutes." |
+| 6 | **Season arc preserved?** | The six-beat arc from §1.5 is not reordered, renamed, or compressed. |
+| 7 | **Tone intact?** | Document does not moralize, does not make characters stupid for laughs, does not lose psychological grounding. See §1.8. |
+| 8 | **Platform not named "Discord"?** | The chat platform is described as Discord-like but never literally called Discord. |
+| 9 | **Logline verbatim?** | If the logline is quoted, it matches §1.1 word for word. |
+| 10 | **Writerly constraints honored?** | Script/creative deliverables satisfy all six constraints in §1.8. |
+| 11 | **Soft locks respected?** | Soft lock values from §2 are used unless a documented change has been approved. |
+| 12 | **No unauthorized canon additions?** | The document does not introduce new canon (new characters, new episodes, retconned backstory) without amendment. |
+
+### 3.3 Violation Severity
+
+| Severity | Definition | Examples | Required Action |
+|---|---|---|---|
+| **Critical** | Contradicts immutable canon in a way that would propagate errors | Wrong episode count, wrong character name, invented 4th main character | Immediate correction; document cannot proceed to review |
+| **Major** | Misrepresents canon in a way that undermines the show's identity | Tone violation (moralizing ending), platform called "Discord," psychodynamic logic broken | Correction required before approval |
+| **Minor** | Surface-level inconsistency that doesn't propagate | Slightly paraphrased logline, handle capitalized in a heading, episode code formatted as "Ep. 1" | Flag and correct; does not block approval |
+
+---
+
+## §4 — Common Canon Violations
+
+This section documents mistakes that have been observed or are likely to occur. Use it as a quick-reference for reviewers.
+
+### 4.1 Title Violations
+
+| Violation | Correct |
+|---|---|
+| "We Out Here" (title case) | WE OUT HERE |
+| "WE OUT HERE:" with subtitle | WE OUT HERE (no colon, no subtitle) |
+| "We Out Here: A Dark Comedy" | WE OUT HERE |
+| "W.O.H." or "WOH" as abbreviation in titles | WE OUT HERE (abbreviation `WOH` acceptable only in internal document IDs, e.g., `WOH-ADMIN-000`) |
+
+### 4.2 Character Handle Violations
+
+| Violation | Correct |
+|---|---|
+| Twinkle.Puss, TWINKLE.PUSS, twinkle_puss, twinklepuss | twinkle.puss |
+| Blong, blong, BLONG, bl0NG, b10ng | bl0ng (zero, not letter O) |
+| Ariane.Emory, ARIANE.EMORY, ariane_emory, arianeemory | ariane.emory |
+| "twinkle" or "puss" as standalone name in narration | twinkle.puss (full handle) |
+| "Ariane" as standalone name in narration | ariane.emory (full handle) |
+
+### 4.3 Episode Title Violations
+
+| Violation | Correct |
+|---|---|
+| "Don't Send It" | "Don't Send That" |
+| "Terms of Service" | "Terms of Abuse" |
+| "Manic Defense" (no "The") | "The Manic Defense" |
+| "Contain Me, Daddy" (added comma) | "Contain Me Daddy" |
+| "Superego Collapse" (no "The") | "The Superego Collapse" |
+| "Let Him Cook" (no parentheses) | "Let Him Cook()" |
+| "Let Him Cook ()" (space before parens) | "Let Him Cook()" |
+| "Let Him Cook( )" (space inside parens) | "Let Him Cook()" |
+
+### 4.4 Tone & Writing Violations
+
+| Violation | Why It's Wrong |
+|---|---|
+| Character delivers a sincere speech about the importance of friendship and the scene plays it straight | Violates §1.8.3 — no moralizing speeches that dissolve the comedy |
+| Episode ends with the trio reconciling and "getting back on track" | Violates §1.8.5 — endings preserve instability |
+| bl0ng is written as the rational voice of reason who saves everyone from bad decisions | Violates §1.8.6 — bl0ng is the *failed* superego; he sees danger but hides behind irony instead of acting |
+| twinkle.puss is written as lovably chaotic with no real consequences | Violates §1.2 — twinkle.puss is "always one decision away from a lawsuit," not a quirky protagonist |
+| ariane.emory is written as the cold genius who explains the theme | Violates §1.2 — ariane.emory processes people as systems; she is not the author's mouthpiece |
+| Chat scenes read like stage plays with full paragraphs of dialogue | Violates §1.8.2 — chat UI must be producible as actual screen content |
+| A wacky misunderstanding drives the A-plot | Violates §1.8.1 — comedy comes from defense mechanisms, not sitcom contrivance |
+| The platform is referred to as "their Discord server" | Violates §1.3 — fictional platform, never literally Discord |
+
+### 4.5 Structural Violations
+
+| Violation | Correct |
+|---|---|
+| "8-episode first season" | 6 episodes, Season 1 |
+| "hour-long episodes" | 30 minutes each |
+| "multi-cam sitcom" | Single-camera |
+| "the fourth member of the group, [name]" | Three main characters only. Additional characters are not main cast unless canon is amended. |
+| Season arc ends in redemption | Season arc ends in "exposure to consequences" |
+
+---
+
+## §5 — Canon vs. Elaboration
+
+Not everything in the project is canon-locked. This section clarifies the boundary.
+
+### 5.1 What Is Canon (defined here, immutable)
+
+- Show title, format, genre, production style
+- Logline (verbatim)
+- Character handles, archetypes, and psychological profiles
+- Season arc (six beats, exact order)
+- Episode titles (exact text, exact order)
+- Tone definition and comp frame
+- Writerly constraints (all six)
+- Platform rule (Discord-like, never literally Discord)
+
+### 5.2 What Is Elaboration (defined in other documents, must not contradict canon)
+
+- Character backstories, relationships, specific dialogue patterns → `character_bible.md`
+- World-building details, setting specifics → `world_bible.md`
+- Episode plots, scene breakdowns, B-stories → `episode_outlines.md`, story breaks
+- Tone examples, do/don't lists → `tone_guide.md`
+- Visual style, color, typography → `brand_guide.md`
+- All scripts, marketing materials, legal documents
+
+### 5.3 What Is Operational (not canon, governed by studio_manifest.md)
+
+- Agent assignments, wave schedules, approval chains
+- File naming conventions, document formatting
+- Communication protocols, conflict resolution
+- Production logistics, crew plans, budgets
+
+**Rule:** Elaboration documents may add detail but never contradict §1. Operational documents are governed by `studio_manifest.md` and do not require canon review unless they reference creative content.
+
+---
+
+## §6 — Amendment Protocol
+
+Canon is designed to be stable. Changing it should be rare, deliberate, and documented.
+
+### 6.1 Who Can Propose Amendments
+
+Any agent may propose an amendment, but amendments are only approved by:
+
+- **Immutable canon (§1):** Requires showrunner approval **AND** ops_agent sign-off. Both must agree.
+- **Soft locks (§2):** Requires the approver(s) specified in the §2 table for that item.
+
+### 6.2 Amendment Process
+
+1. **Proposer** writes a canon amendment request including:
+   - Which section/value is affected
+   - Current canon value
+   - Proposed new value
+   - Rationale for the change
+   - Impact assessment: list every deliverable that would need to be updated
+2. **ops_agent** logs the request and routes it to the showrunner.
+3. **continuity_agent** assesses downstream impact across all existing deliverables.
+4. **Showrunner** approves or rejects.
+5. If approved:
+   - ops_agent updates this document with the new value.
+   - A new entry is added to the Version History (§7).
+   - All affected deliverables are flagged for revision.
+   - The old value is preserved in the Version History for auditability.
+
+### 6.3 What Cannot Be Amended
+
+Some values are considered foundational and should not be amended under normal circumstances. If any of these need to change, it signals a fundamental creative pivot that requires a full project reassessment:
+
+- The number of main characters (three)
+- The show title (WE OUT HERE)
+- The genre (single-camera dark sitcom / tech psychocomedy)
+- The number of episodes in Season 1 (six)
+
+Amendments to these values require unanimous principal agreement and a documented reassessment of all project deliverables.
+
+---
+
+## §7 — Version History
+
+| Version | Date | Author | Change Summary |
+|---|---|---|---|
+| 1.0.0 | 2026-04-10 | showrunner_agent | Initial canon lock. All immutable values established. Soft locks documented. Enforcement rules, violation guide, and amendment protocol defined. |
+
+---
+
+*This document is maintained by the showrunner_agent. It is the highest-authority creative reference in the WE OUT HERE project. When in doubt, check here first. If it's not in this file, it's not canon — it's elaboration.*
+
+</script>
+<script type="text/markdown" id="raw-master_schedule">
+# 00_admin/master_schedule.md
+
+**Project:** WE OUT HERE  
+**Document ID:** WOH-ADMIN-005  
+**Version:** 1.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Owner/Subagent:** ops_agent  
+**Status:** Draft  
+**Time Basis:** Month-by-month master schedule  
+**Planning Horizon:** 2026-04 through 2027-06
+
+---
+
+## Purpose
+
+This document is the working master schedule for WE OUT HERE from active development through financing, pre-production, principal photography, post-production, and launch. It is the coordination reference for date logic, milestone sequencing, approval gates, critical path protection, and buffer assumptions.
+
+## Dependencies
+
+This schedule depends on the current assumptions and canon in the following files:
+
+- `00_admin/canon_lock.md`
+- `00_admin/assumptions.md`
+- `00_admin/risk_register.md`
+- `00_admin/studio_manifest.md`
+
+The schedule also assumes completion of downstream planning documents that will add operating detail without overriding this master sequence:
+
+- `10_finance/funding_strategy.md`
+- `10_finance/cashflow_projection.md`
+- `11_legal/operating_agreement.md`
+- `12_production/shooting_schedule.md`
+- `13_post/post_production_plan.md`
+- `14_distribution/release_plan.md`
+
+---
+
+## Planning Premises
+
+| Item | Working Premise |
+|---|---|
+| **Title** | WE OUT HERE |
+| **Target production start** | Q3 2026 |
+| **Target delivery** | Q1-Q2 2027 |
+| **Format anchor** | 6 episodes x 30 minutes |
+| **Production model** | Indie-to-lower-mid-budget professional production |
+| **Distribution path** | Festival premiere -> streamer or digital-first distribution |
+| **Primary schedule unit** | Calendar month |
+| **Master contingency reserve** | 4 schedule weeks across prep, production, and post |
+
+---
+
+## Master Schedule Summary
+
+| Phase | Window | Primary Outcome |
+|---|---|---|
+| **Development Foundation** | 2026-04 to 2026-05 | Canon, creative package, room structure, legal/ops foundation established |
+| **Script + Financing Build** | 2026-05 to 2026-07 | Scripts, pitch materials, budget tiers, investor outreach, entity formation |
+| **Prep / Pre-Production** | 2026-07 to 2026-08 | Cast, crew, locations, schedule, production design, legal clearances, technical tests |
+| **Principal Photography** | 2026-09 | Season shot and wrapped within Q3 2026 target |
+| **Editorial + Post** | 2026-09 to 2027-02 | Picture edit, VFX, sound, score, color, QC, masters |
+| **Festival / Launch Prep** | 2026-11 to 2027-03 | Key art, trailer, press kit, festival submissions, launch materials |
+| **Delivery + Distribution Window** | 2027-03 to 2027-06 | Final season delivery, festival launch, acquisition or release execution |
+
+---
+
+## Month-by-Month Master Schedule
+
+| Month | Development | Financing / Business | Prep / Production / Post | Launch / Distribution | Gates / Notes |
+|---|---|---|---|---|---|
+| **2026-04** | Lock canon references, finalize dev plan, stand up writers' room rules, begin series bible and tone guide | Form production entity path, open legal workstream, outline budget tiers, prepare outreach list | Start hybrid-format pipeline assumptions and schedule model | Define target buyer/festival list at high level | **Gate A:** Foundation greenlight by end of month |
+| **2026-05** | Complete story architecture, episode outlines, season arc support docs, first room cycle | Draft pitch deck, treatment, investor narrative, master budget v1 | Early casting strategy, location criteria, UI/screen capture requirements | Build release strategy assumptions and target festivals | Script delivery risk becomes active critical-path monitor |
+| **2026-06** | Full script drafting across all 6 episodes, table-read planning, rewrite notes begin | Investor outreach wave 1, financing meetings, cashflow model, insurance planning | Department head shortlist, production plan skeleton, initial legal templates | Press and marketing positioning begin in outline form | **Gate B:** 6 first drafts + budget framework approved |
+| **2026-07** | Polish scripts to production draft targets, lock creative scope cuts if needed | Financing close target, bridge/cashflow decision, tax incentive selection, banking/payments setup | Hire key heads, launch casting, scout locations, build shooting schedule, test screenlife capture pipeline | Reserve launch calendar placeholders and submission deadlines | **Gate C:** Financing + production GO/NO-GO by mid/late month |
+| **2026-08** | Final production rewrites only; no structural story expansion | Final vendor commitments, payroll/payment schedule, insurance binders | Full pre-production: cast attachments, crew staffing, permits, set build/dress, rehearsals, tech scout, camera/UI tests | Trailer capture plan, key art planning, press materials queued | Schedule includes 1 prep buffer week before cameras |
+| **2026-09** | Script support and on-set rewrite control | Daily cost tracking and burn monitoring | **Principal photography** for full season; editor starts assembly on early material; wrap by end of month | Begin behind-the-scenes asset capture for future campaign | **Gate D:** Production wrap + post handoff |
+| **2026-10** | Limited pickups decision if required | Cost report reconciliation, post cash allocation | Editorial on all episodes, assistant editor turnover, VFX spotting, music and sound spotting | Festival submission package strategy narrows to realistic windows | Pickup decision deadline should fall no later than mid-month |
+| **2026-11** | Creative approvals on cuts 1-2 | Confirm remaining post funding and reserve for deliverables/QC | Editor's cuts to producer/showrunner cuts; VFX begins; sound design prep | Press kit draft, teaser/trailer planning, early festival submissions where eligible | Critical path shifts from scripts/financing to post completion |
+| **2026-12** | Final story notes only; no major reconception | Distribution outreach prep deck, sales positioning | Locked cut targets for lead episodes; VFX, sound, score, color move in overlap | Submission wave for spring/summer 2027 launch scenarios | Holiday slowdown assumption: 1-2 weeks reduced throughput |
+| **2027-01** | Approval focus only | Buyer conversations start softly if materials support it | Picture lock on full season target, sound mix, color, captions, deliverables assembly | Trailer, website, launch calendar, festival and sales materials complete to release-ready draft | **Gate E:** Picture lock / delivery readiness review |
+| **2027-02** | No further creative expansion | Confirm release path A/B/C based on market response | Final online, QC, masters, captions, legal deliverables, full season packaging | Festival submission finalization and launch execution planning | Target final finishing complete by month end |
+| **2027-03** | Support press narrative and talent talking points | Acquisition conversations or self-release activation | **Target delivery opens**; final masters available for buyers/festivals/platforms | Earliest launch window: festival premiere, pilot debut, or industry screening | **Gate F:** Delivery approval |
+| **2027-04** | Maintain materials, no new core creative work | Negotiate distribution terms or finalize direct-release spend | Hold for required fixes only | Primary spring launch window; press, trailer, social rollout | 2-4 week market-response buffer preserved |
+| **2027-05** | N/A except release support | Execute deal close or distribution bookings | Any final technical revisions from partner/platform | Secondary launch window if March/April slips | Keeps delivery inside Q2 2027 target |
+| **2027-06** | N/A except post-launch support | Revenue tracking and reporting setup | Archive and turnover | Latest planned Q2 2027 launch / release completion window | End of target delivery horizon |
+
+---
+
+## Key Milestones
+
+| Milestone | Target Window | Owner | Dependency |
+|---|---|---|---|
+| **Foundation package approved** | End of 2026-04 | ops_agent + showrunner | Canon, assumptions, development framework |
+| **All 6 first-draft scripts complete** | By end of 2026-06 | script_agent + writers_room_agent | Episode outlines, room process, tone guardrails |
+| **Budget framework + investor package approved** | By end of 2026-06 | finance_agent + development_agent + EP | Scripts, pitch materials, budget assumptions |
+| **Financing GO/NO-GO** | Mid to late 2026-07 | EP + finance_agent + ops_agent | Investor commitments, cashflow plan, legal structure |
+| **Prep lock** | End of 2026-08 | production_agent + legal_agent + hr_agent | Cast, crew, locations, permits, schedule, insurance |
+| **Principal photography start** | Q3 2026 | production_agent | Prep lock |
+| **Principal photography wrap** | End of 2026-09 | production_agent | Shoot execution |
+| **Picture lock** | 2027-01 | post_agent + showrunner | Editorial, pickups decision, VFX progress |
+| **Final masters / delivery package complete** | 2027-02 to 2027-03 | post_agent + legal_agent | Mix, color, captions, QC, clearance |
+| **Festival / buyer launch begins** | 2027-03 onward | distribution_agent + marketing_agent + press_agent | Final delivery package |
+
+---
+
+## Critical Path
+
+The schedule's critical path is:
+
+1. Canon and development foundation complete.
+2. Episode outlines and six scripts reach finance-ready draft state.
+3. Budget, cashflow, and investor materials finalize.
+4. Financing close and legal entity/insurance readiness complete.
+5. Casting, crewing, location lock, and shooting schedule lock complete.
+6. Principal photography occurs within Q3 2026.
+7. Editorial, VFX, sound, color, and QC complete without major pickup cycle.
+8. Final masters and release materials deliver by Q1-Q2 2027.
+
+Any slip longer than two weeks in steps 2, 4, 5, 6, or 7 threatens the Q1-Q2 2027 delivery target.
+
+---
+
+## Approval Gates
+
+| Gate | Timing | Approval Standard | Approvers |
+|---|---|---|---|
+| **Gate A - Foundation** | End of 2026-04 | Canon-aligned development and ops base complete | showrunner + ops_agent |
+| **Gate B - Creative Build** | End of 2026-06 | 6 scripts at first draft, pitch materials complete, budget framework approved | showrunner + EP + finance_agent |
+| **Gate C - Production GO/NO-GO** | 2026-07 | Minimum financing, legal structure, and prep viability confirmed | EP + ops_agent + finance_agent + legal_agent |
+| **Gate D - Prep Lock / Cameras** | End of 2026-08 | Cast, crew, locations, permits, insurance, and shooting schedule approved | EP + production_agent |
+| **Gate E - Picture Lock Review** | 2027-01 | Editorial and post status support finishing without structural rebuild | showrunner + post_agent |
+| **Gate F - Delivery Approval** | 2027-02 to 2027-03 | Masters, QC, captions, clearances, and package complete | showrunner + EP + post_agent + legal_agent |
+
+---
+
+## Dependencies by Phase
+
+| Phase | Cannot Start Cleanly Until | Main Upstream Dependencies |
+|---|---|---|
+| **Financing push** | Scripts and pitch package exist | `01_development/pitch_deck.md`, `02_scripts/*`, `10_finance/master_budget.md` |
+| **Pre-production** | Financing is sufficiently committed | `10_finance/cashflow_projection.md`, `11_legal/operating_agreement.md`, `11_legal/insurance_plan.md` |
+| **Principal photography** | Cast, crew, locations, permits, schedule, insurance are locked | `08_casting/*`, `09_hr_recruiting/*`, `12_production/*`, `11_legal/location_release_template.md` |
+| **Post finishing** | Assembly edits and pickups decision are complete | `13_post/edit_workflow.md`, `13_post/vfx_breakdown.md` |
+| **Launch / festival / distribution** | Final delivery assets exist or are near-final | `05_marketing/launch_calendar.md`, `06_press_kit/press_kit.md`, `14_distribution/release_plan.md` |
+
+---
+
+## Slack / Buffer Assumptions
+
+| Buffer | Amount | Held In | Use Rule |
+|---|---|---|---|
+| **Script emergency buffer** | 2 weeks | June-July 2026 | Used only for draft delays or essential rewrites |
+| **Prep buffer** | 1 week | Late August 2026 | Protects casting, permitting, and tech scout slippage |
+| **Production recovery buffer** | 2 shoot days equivalent | Inside September 2026 plan | Reserved for weather, overages, or technical resets |
+| **Post buffer** | 2-3 weeks | January-February 2027 | Covers VFX, mix, QC, and caption delays |
+| **Launch buffer** | 2-4 weeks | March-April 2027 | Covers buyer notes, festival response, or release-date optimization |
+
+The schedule assumes buffers are consumed in order of least market impact: internal rewrite time first, then prep float, then post float, with launch window movement as the last resort.
+
+---
+
+## Launch Windows
+
+| Window | Dates | Use Case | Notes |
+|---|---|---|---|
+| **Window A - Early Spring 2027** | March 2027 | Best-case delivery and immediate festival/buyer launch | Preferred if final masters are approved by late February |
+| **Window B - Core Spring 2027** | April 2027 | Primary launch window with fuller press runway | Preserves Q2 target and allows buffer recovery |
+| **Window C - Late Spring / Early Summer 2027** | May-June 2027 | Fallback if post or market timing slips | Still inside target delivery horizon |
+
+Preferred release logic remains: festival or market-facing premiere first, followed by streamer acquisition or controlled direct digital release.
+
+---
+
+## Schedule Risks That Threaten Delivery
+
+| Risk | Pressure Point | Mitigation |
+|---|---|---|
+| **Script delays** | Pushes financing close and prep start | Enforce June first-draft deadline and use script buffer early |
+| **Financing gap** | Stops crewing and location commitments | Run investor outreach in parallel, maintain scalable budget tiers |
+| **Hybrid pipeline failure** | Slows prep, edit, and VFX | Prototype screen capture and post workflow before cameras |
+| **Casting delays** | Compresses rehearsal and schedule lock | Begin outreach before full financing close where legally feasible |
+| **Post overrun** | Threatens Q1-Q2 2027 delivery | Lock pickups early, cap VFX scope, protect final mix and QC dates |
+
+---
+
+## Operating Notes
+
+- This is a master schedule, not a day-out-of-days or stripboard.
+- Month-level targets should be translated into weekly execution plans by each owner once downstream docs are created.
+- If Gate C slips past July 2026, the Q3 2026 production target is immediately at risk and requires replanning.
+- If picture lock slips beyond January 2027, the schedule should default to Window B or Window C rather than compress final QC.
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| 1.0.0 | 2026-04-10 | ops_agent | Initial creation of month-by-month master schedule from development through launch |
+
+---
+
+## Next related files
+
+- `00_admin/assumptions.md`
+- `00_admin/risk_register.md`
+- `10_finance/funding_strategy.md`
+- `12_production/shooting_schedule.md`
+- `13_post/post_production_plan.md`
+- `14_distribution/release_plan.md`
+
+</script>
+<script type="text/markdown" id="raw-partner_materials_index">
+# 00_admin/partner_materials_index.md
+
+## Purpose
+Provide a canon-aligned entry point to the most important outward-facing `WE OUT HERE` materials for partners, investors, press, and collaborators.
+
+## Owner/Subagent
+partner_materials_agent
+
+## Status
+Draft v1 - curated shortlist package index
+
+## Dependencies
+- `/home/mojo/projects/show/we-out-here/00_admin/canon_lock.md`
+- `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+- `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+- `/home/mojo/projects/show/we-out-here/01_development/pitch_treatment.md`
+- `/home/mojo/projects/show/we-out-here/01_development/FAQ_for_partners.md`
+- `/home/mojo/projects/show/we-out-here/10_finance/investor_memo.md`
+
+## Package Goal
+This shortlist package gives external readers a clean path into `WE OUT HERE` without forcing them through the full project archive. It is designed to answer the first practical questions quickly:
+
+- what the show is
+- why it matters now
+- how it looks and feels
+- what kind of production and business opportunity it represents
+- where to go next based on audience type
+
+## Core Shortlist
+Start here for nearly all external readers:
+
+1. `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+2. `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+3. `/home/mojo/projects/show/we-out-here/01_development/FAQ_for_partners.md`
+
+This sequence delivers the fastest accurate understanding of the series before a reader moves into deeper creative, financial, press, or collaboration materials.
+
+## Recommended Read Order By Audience
+
+### Partners
+1. `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+2. `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+3. `/home/mojo/projects/show/we-out-here/01_development/pitch_treatment.md`
+4. `/home/mojo/projects/show/we-out-here/01_development/FAQ_for_partners.md`
+5. `/home/mojo/projects/show/we-out-here/15_business_dev/partnership_ideas.md`
+
+### Investors
+1. `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+2. `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+3. `/home/mojo/projects/show/we-out-here/10_finance/investor_memo.md`
+4. `/home/mojo/projects/show/we-out-here/10_finance/top_sheet_budget.md`
+5. `/home/mojo/projects/show/we-out-here/10_finance/financing_strategy.md`
+6. `/home/mojo/projects/show/we-out-here/10_finance/recoupment_waterfall.md`
+
+### Press
+1. `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+2. `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+3. `/home/mojo/projects/show/we-out-here/01_development/tonal_comps.md`
+4. `/home/mojo/projects/show/we-out-here/01_development/FAQ_for_partners.md`
+5. `/home/mojo/projects/show/we-out-here/05_marketing/publicity_copy_bank.md`
+
+### Collaborators
+1. `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+2. `/home/mojo/projects/show/we-out-here/01_development/pitch_treatment.md`
+3. `/home/mojo/projects/show/we-out-here/01_development/character_bible.md`
+4. `/home/mojo/projects/show/we-out-here/01_development/season_bible.md`
+5. `/home/mojo/projects/show/we-out-here/12_production/production_plan.md`
+
+## Material Notes
+- `partner_shortlist.md` is the one-page summary for fast circulation.
+- `one_page_series_overview.md` gives the clearest quick creative read.
+- `pitch_treatment.md` is the fuller creative document for buyers, producers, and key talent.
+- `FAQ_for_partners.md` handles common external questions cleanly.
+- `investor_memo.md` is the correct starting point for financing conversations.
+- `publicity_copy_bank.md` helps press, marketing, and comms partners stay on-message.
+
+## Canon Notes
+All outward-facing use should remain aligned to `canon_lock.md`, especially on:
+
+- title styling: `WE OUT HERE`
+- format: `6 episodes x 30 minutes, Season 1`
+- genre: `single-camera dark sitcom / tech psychocomedy`
+- style: `desktop realism + live action + surreal insert sequences`
+- platform name: `Backchannel`
+- lead handles: `twinkle.puss`, `bl0ng`, `ariane.emory`
+
+## Next related files
+- `/home/mojo/projects/show/we-out-here/01_development/partner_shortlist.md`
+- `/home/mojo/projects/show/we-out-here/01_development/one_page_series_overview.md`
+- `/home/mojo/projects/show/we-out-here/01_development/FAQ_for_partners.md`
+- `/home/mojo/projects/show/we-out-here/10_finance/investor_memo.md`
+
+</script>
+<script type="text/markdown" id="raw-project_glossary">
+# WE OUT HERE — Project Glossary
+
+**Document ID:** WOH-ADMIN-005  
+**Version:** 1.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Responsible Agent:** ops_agent  
+**Status:** Draft  
+**Classification:** Internal — All Principals
+
+---
+
+## Purpose
+
+This glossary defines all project-specific terminology used across the WE OUT HERE production. It serves as a shared vocabulary for all agents, principals, crew, and collaborators. If a term appears in any project document and its meaning is not self-evident, it should be defined here.
+
+**Usage:** When using a specialized term in any deliverable for the first time, reference this glossary. When reviewing a deliverable, check unfamiliar terms here before asking for clarification.
+
+**Canon Reference:** Character and creative definitions in this glossary must be consistent with `00_admin/canon_lock.md` (WOH-ADMIN-000). This glossary elaborates but does not override canon.
+
+---
+
+## §1 — Character Handles & Identities
+
+| # | Term | Definition |
+|---|---|---|
+| 1 | **twinkle.puss** | Handle of the first main character. The impulsive visionary. Hypomanic, grandiose, charismatic, erratic, hungry for legitimacy, terrified of economic precarity, always one decision away from a lawsuit. Handle is always lowercase with a period separator. Never abbreviated. The zero-trust friend who trusts everything. |
+| 2 | **bl0ng** | Handle of the second main character. The failed superego. A moral realist who sees the danger clearly but hides all real concern inside irony, sarcasm, reaction GIF logic, and passive-aggressive one-liners. Handle uses a zero (0), not the letter O. Always lowercase. Never abbreviated. The conscience that can't bring itself to speak plainly. |
+| 3 | **ariane.emory** | Handle of the third main character. The detached meta-observer. Hyper-articulate, dissociated, aesthetically motivated, more comfortable processing people as systems than relating to them directly. Handle is always lowercase with a period separator. Never abbreviated. Named in allusion to C.J. Cherryh's character — the resonance is intentional; the show need not explain it. |
+| 4 | **Cataclysm Consulting** | Working title for the fictional AI consultancy founded by the three main characters. The company is the structural engine of the plot — it generates the contracts, clients, crises, and ethical dilemmas that drive each episode. Name is a SOFT LOCK and may change during writers' room. |
+| 5 | **The Trio** | Informal shorthand for twinkle.puss, bl0ng, and ariane.emory collectively. Acceptable in internal documents but NOT in canon-facing or public materials (where all three handles should be listed). |
+| 6 | **Handle** | The username/screen name by which each main character is identified. In WE OUT HERE, handles are the primary mode of address — they are more real than real names. The show treats handles as identity, not aliases. |
+
+---
+
+## §2 — Show-Specific Creative Terms
+
+| # | Term | Definition |
+|---|---|---|
+| 7 | **Desktop Realism** | A production style in which scenes are presented as if captured directly from a character's computer or phone screen. The audience sees what the character sees: chat windows, browser tabs, notifications, cursors, typing indicators, video calls. Distinguished from "screenlife" (see below) by its emphasis on realism — these are not stylized montages of screens but diegetically motivated recordings of actual digital interaction. |
+| 8 | **Screenlife** | A broader genre/production term for narrative content presented through screens. Films like SEARCHING (2018), UNFRIENDED (2014), and PROFILE (2018) are screenlife. WE OUT HERE uses screenlife as one of three production modes. In this project, "screenlife" and "desktop realism" are often used interchangeably, though "desktop realism" emphasizes the grounded, un-stylized quality of the show's approach. |
+| 9 | **Surreal Insert** | A sequence that departs from realist staging into stylized, dreamlike, or metaphorical visual territory. Surreal inserts externalize a character's psychological state — making visible what is normally invisible (anxiety, dissociation, grandiosity, paranoia). They are brief (typically 15–90 seconds), psychologically motivated, and must earn their departure from realism. Approximately 10% of total screen time. |
+| 10 | **Live Action** | Traditional single-camera film/television coverage — actors in physical spaces, shot with standard cinematographic grammar. Approximately 50–60% of total screen time. The "default mode" of the show when characters are interacting in physical space rather than through screens. |
+| 11 | **Hybrid Format** | The defining production approach of WE OUT HERE: the interweaving of desktop realism, live action, and surreal inserts within and across episodes. The transitions between modes are load-bearing — they signal shifts in register, intimacy, and psychological reality. |
+| 12 | **Tech Psychocomedy** | The show's genre descriptor (used alongside "dark sitcom"). Comedy that emerges from the intersection of technology culture and psychological defense mechanisms. Not tech satire alone (which would be observational) and not psychological drama alone (which would be earnest). The comedy IS the psychology. |
+| 13 | **Dark Sitcom** | A situation comedy that does not reset to stability at the end of each episode. Problems compound. Wins create new problems. The instability is cumulative across the season. Distinguished from "dark comedy" (a film genre) by its episodic structure and character-driven humor. |
+| 14 | **One-Way Ratchet** | The structural principle governing the season arc: instability accumulates and does not reverse. Each episode's resolution creates conditions for the next episode's crisis. There is no "bounce back" episode. Borrowed from mechanical engineering — a ratchet permits motion in only one direction. |
+| 15 | **Failed Holding Environment** | The show's central metaphor (from psychoanalytic theory). The trio's friendship and their group chat are supposed to function as a holding environment — a relational container for anxiety and vulnerability. They fail at this. The failure is what makes the show both funny and painful. See §4 for the full psychoanalytic definition. |
+| 16 | **Reaction GIF Logic** | bl0ng's primary communication mode: responding to situations with ironic detachment mediated through memes, GIFs, reaction images, and sardonic one-liners rather than direct emotional engagement. A defense mechanism rendered in internet-native form. |
+| 17 | **Chat Dynamics** | The visual and narrative grammar of how conversations unfold in the fictional chat platform: typing indicators, message edits, deletions, emoji reactions, @mentions, thread branching, read receipts. These micro-interactions carry dramatic weight. A typing indicator that starts and stops IS a dramatic beat. |
+| 18 | **The Group Chat** | The primary dramatic space of the show — `Backchannel`, the fictional group-chat platform where twinkle.puss, bl0ng, and ariane.emory conduct their business, manage their crises, and fail to manage their relationships. The group chat is not just a setting; it is a character. It contains what the characters cannot say to each other's faces. |
+| 19 | **Exposure to Consequences** | The final beat of the season arc (S01E06 "Let Him Cook()"). Not redemption, not punishment, not catharsis — but the characters being forced to see and reckon with what their actions have produced. The show does not moralize; it reveals. |
+| 20 | **The Manic Defense** | Both an episode title (S01E03) and a psychoanalytic concept deployed in the show. See §4 for the clinical definition. In the show's context: the strategy of escalating energy, productivity, and grandiosity to avoid confronting depression, loss, or failure. twinkle.puss's default operating mode. |
+
+---
+
+## §3 — Production & Technical Terms
+
+| # | Term | Definition |
+|---|---|---|
+| 21 | **Single-Camera (Single-Cam)** | A production method using one camera (or one camera setup at a time) per shot, typical of prestige comedy and drama. Allows more cinematic composition and lighting than multi-cam. WE OUT HERE is single-cam for all live-action sequences. |
+| 22 | **Screen Capture Pipeline** | The technical workflow for recording screenlife content: building the functional chat platform UI, populating it with scripted messages, and recording the screen at production resolution. Distinguished from "filming a screen with a camera" — the capture IS the camera. |
+| 23 | **UI/UX Design (Production Context)** | In WE OUT HERE, UI/UX design is not a post-production task — it is a production design task. The fictional chat platform must be designed, built, and functional before screenlife scenes can be captured. The UI designer is a creative collaborator, not a vendor. |
+| 24 | **Standing Set** | A permanent or semi-permanent set built or dressed on a stage/warehouse that remains available for the duration of principal photography. WE OUT HERE assumes 2–3 standing sets for recurring locations (e.g., the characters' primary workspace, a secondary living space). |
+| 25 | **Practical Location** | A real-world location (not a purpose-built set) used for filming. WE OUT HERE assumes 3–5 practicals across the season (e.g., coffee shops, co-working spaces, client offices). |
+| 26 | **Block Shooting** | A scheduling method where scenes from multiple episodes are shot together based on location or actor availability rather than episode order. Maximizes efficiency by reducing company moves. |
+| 27 | **Cover Set** | An interior backup location (usually a standing set) that can be used when exterior shooting is canceled due to weather or other disruption. A schedule insurance policy. |
+| 28 | **Day Player** | A crew member or actor hired for a single day or a small number of days, rather than for the full production run. Common for specialized roles or guest cast. |
+| 29 | **Company Move** | The relocation of the entire production crew from one shooting location to another within the same shooting day. Company moves cost time and money; minimizing them is a scheduling priority. |
+| 30 | **Principal Photography** | The main period of film/TV production when scenes are shot with the primary cast and crew. Distinguished from pre-production (planning) and post-production (editing). |
+| 31 | **Proof-of-Concept (POC)** | A short piece of produced material (a scene, a sizzle reel, or a pilot-length sample) used to demonstrate the show's tone, visual style, and hybrid format to potential investors, cast, or platform buyers. |
+| 32 | **Sizzle Reel** | A short, edited presentation (typically 2–5 minutes) combining footage, concept art, mood references, and text to convey the feel and pitch of a project. Used in packaging and financing. Not a trailer (trailers are cut from finished footage). |
+| 33 | **Table Read** | A seated reading of a full script by actors (or stand-ins), attended by writers and key creatives. Used to test pacing, joke timing, and character voice before production. A critical quality gate. |
+| 34 | **Call Sheet** | A daily production document listing the schedule, scenes, cast calls, crew calls, locations, weather forecast, and contact information for each shooting day. The single most important logistics document during production. |
+| 35 | **AD (Assistant Director)** | The crew member responsible for managing the set schedule, calling shots, maintaining discipline, and ensuring the day's work is completed. The 1st AD is the primary schedule enforcer on set. |
+
+---
+
+## §4 — Psychoanalytic & Psychological Terms
+
+These terms are drawn from psychoanalytic theory and are referenced throughout the show's creative documents. The show uses these concepts to structure character behavior and dramatic logic — they are load-bearing, not decorative.
+
+| # | Term | Definition |
+|---|---|---|
+| 36 | **Defense Mechanism** | An unconscious psychological strategy used to protect the self from anxiety, conflict, or intolerable feelings. In WE OUT HERE, each character's primary defense mechanism defines their comedic and dramatic behavior. Comedy emerges FROM the defenses, not despite them. |
+| 37 | **Holding Environment** | (D.W. Winnicott) A relational space — originally the parent-infant relationship — that provides safety, containment, and predictability, allowing the held person to experience and process difficult feelings without being overwhelmed. In WE OUT HERE, the group chat and the trio's friendship are supposed to function as holding environments. They fail. The failure is the show. |
+| 38 | **Containment** | (Wilfred Bion) The capacity to receive, hold, and metabolize another person's projected emotional states — particularly anxiety, rage, and despair — without retaliating, collapsing, or passing the distress back unprocessed. S01E04 "Contain Me Daddy" is named for the failure of this function. |
+| 39 | **Superego** | (Sigmund Freud) The moral component of the psyche — the internalized voice of rules, conscience, prohibition, and judgment. bl0ng IS the superego of the trio, but a failed one: he sees what's wrong but cannot bring himself to intervene directly. S01E05 "The Superego Collapse" is named for the moment this function gives out entirely. |
+| 40 | **The Manic Defense** | (Melanie Klein) A psychological defense against depressive anxiety characterized by omnipotence, denial of psychic reality, contempt, and triumph. In non-clinical terms: going into overdrive (energy, productivity, grandiosity) to avoid feeling loss, smallness, or failure. twinkle.puss's baseline state. S01E03 is titled "The Manic Defense." |
+| 41 | **Projection** | A defense mechanism in which intolerable feelings or qualities are attributed to someone else. "I'm not anxious — YOU'RE anxious." In the show, the trio constantly projects onto each other, onto clients, and onto the group chat itself. |
+| 42 | **Dissociation** | A psychological process of disconnection from one's thoughts, feelings, surroundings, or sense of identity. ariane.emory's primary mode: she processes the world from a cognitive remove, treating emotional reality as an intellectual problem. The surreal inserts often externalize dissociative states. |
+| 43 | **Splitting** | A defense mechanism in which people or situations are perceived as all-good or all-bad, with no integration of ambivalence. The trio splits their clients, their company, and each other. A client is either a savior or an enemy; a deal is either a breakthrough or a catastrophe. |
+| 44 | **Ironic Detachment** | Not a formal psychoanalytic term, but a defense pattern central to bl0ng: using irony, humor, and performative indifference to maintain emotional distance from situations that are actually threatening or painful. bl0ng's ironic detachment is his version of the manic defense — it's just quieter. |
+| 45 | **Transference** | (Freud) The redirection of feelings and desires originally associated with one person (typically a parent or early caregiver) onto another person. In the show, the trio's relationships with their clients are loaded with transferential dynamics — clients become parental figures, persecutors, or dependents. |
+| 46 | **Countertransference** | The therapist's (or in this case, the consultant's) emotional response to the client's transference. When twinkle.puss starts acting out because a client reminds him of an authority figure who dismissed him, that's countertransference without self-awareness. |
+| 47 | **Acting Out** | Expressing unconscious conflicts through behavior rather than words or reflection. twinkle.puss's primary mode: instead of talking about anxiety, he sends the email, signs the contract, launches the product, makes the deal. Every impulsive action is an acted-out feeling. |
+| 48 | **Psychic Retreat** | (John Steiner) A mental state to which one withdraws when the pain of engagement with reality becomes intolerable. ariane.emory's meta-observer position is a psychic retreat — she retreats into analysis, aesthetics, and systems-thinking to avoid the vulnerability of genuine connection. |
+| 49 | **Reparation** | (Klein) The desire to repair damage done to a loved object (person, relationship, group). Reparation is what the trio CANNOT quite do. They know they're hurting each other and the company. They try, occasionally, to fix things. They fail. The reparation attempts generate comedy because they are always slightly wrong. |
+
+---
+
+## §5 — Business, Legal & Financial Terms
+
+| # | Term | Definition |
+|---|---|---|
+| 50 | **Out Here Productions LLC** | The provisional name for the production entity that will hold all IP, contracts, and financial accounts for WE OUT HERE. A Delaware LLC. Entity has NOT been formed yet as of this document's creation date. Soft lock — name may change. |
+| 51 | **LLC (Limited Liability Company)** | A U.S. business structure that provides pass-through taxation and limited personal liability for its members. The standard entity type for indie film/TV production. |
+| 52 | **Operating Agreement** | The internal governance document of an LLC, defining member rights, profit distribution, decision-making authority, and dissolution procedures. Distinct from a partnership agreement. The constitutional document of the production entity. |
+| 53 | **Chain of Title** | The documented history of IP ownership from creation to current holder. A clean chain of title — showing that Out Here Productions LLC owns all rights to WE OUT HERE — is required for E&O insurance and platform acquisition. Every contributor must sign IP assignment or work-for-hire agreements. |
+| 54 | **E&O Insurance (Errors and Omissions)** | A liability insurance policy that protects the production against claims of defamation, copyright infringement, invasion of privacy, and other IP-related liabilities. Required by virtually every distributor and platform. E&O coverage typically requires a legal opinion letter confirming the chain of title and script clearance. |
+| 55 | **SAG-AFTRA New Media Agreement** | A contract framework from the Screen Actors Guild-American Federation of Television and Radio Artists designed for content produced for new media/streaming platforms with budgets below certain thresholds. Offers reduced rates and modified terms compared to standard television agreements. The assumed union framework for WE OUT HERE cast. |
+| 56 | **Work-for-Hire** | A legal doctrine (U.S. copyright law) under which the employer, not the creator, is considered the author and owner of a work created within the scope of employment or under a qualifying agreement. Essential for ensuring the production entity owns all contributions. |
+| 57 | **IP Assignment** | A legal document in which a contributor transfers ownership of their intellectual property (ideas, writing, designs) to the production entity. Used for contributions that don't qualify as work-for-hire. |
+| 58 | **Above-the-Line (ATL)** | Budget category encompassing creative leadership: writers, director(s), producers, and principal cast. Costs are typically fixed and negotiated individually. In WE OUT HERE, approximately 25–35% of total budget. |
+| 59 | **Below-the-Line (BTL)** | Budget category encompassing all crew, equipment, locations, materials, and day-to-day production costs. Managed as a line-item budget with per-day and per-department rates. In WE OUT HERE, approximately 40–50% of total budget. |
+| 60 | **Tax Incentive** | A state or national program that provides rebates, credits, or grants to film/TV productions that shoot in a specific jurisdiction and meet qualifying criteria (spending thresholds, local hiring). Can reduce effective production cost by 15–35%. |
+| 61 | **Bridge Financing** | Short-term funding used to cover cash flow gaps between committed investor payments and actual production expenses. Common in indie production where investor tranches arrive on different schedules than vendor invoices. |
+| 62 | **Platform Acquisition** | The sale or licensing of a completed series to a streaming platform (e.g., Hulu, Peacock, Amazon). Terms typically include a license fee, territory, and term (number of years). Distinguished from a co-production (where the platform is involved from development). |
+| 63 | **TVOD / SVOD / AVOD / FAST** | Distribution models. TVOD = transactional video on demand (pay per view, e.g., iTunes rental). SVOD = subscription video on demand (e.g., Netflix, Hulu). AVOD = advertising-supported video on demand (e.g., Tubi, Pluto TV). FAST = free ad-supported streaming television (linear channels on platforms like Roku, Samsung TV+). |
+| 64 | **Deliverables (Distribution Context)** | The technical package required by a distributor or platform: master files in specified formats (ProRes, H.264), closed captions, subtitles, key art, metadata, trailer, EPK materials. Spec requirements vary by platform. |
+| 65 | **NDA (Non-Disclosure Agreement)** | A contract prohibiting the recipient from sharing confidential information. All WE OUT HERE personnel sign NDAs covering scripts, story materials, cast information, and business terms. |
+
+---
+
+## §6 — Platform & Technology Terms (Show's World)
+
+These terms describe the technology ecosystem that exists within the fictional world of WE OUT HERE. They are relevant to writing, production design, and the screenlife pipeline.
+
+| # | Term | Definition |
+|---|---|---|
+| 66 | **The Platform** | `Backchannel`, the fictional group-chat application used by the trio. It is never called "Discord" in the show (per canon_lock.md §1.3). It is legally and narratively distinct from any real-world platform. It is the primary dramatic space of the show — more scenes take place here than in any physical location. |
+| 67 | **Channel** | A topic-organized conversation space within the platform (equivalent to a Discord channel or Slack channel). The trio's platform likely has channels for: general, clients, invoicing, memes, existential-dread, etc. Channel names are a worldbuilding detail defined in the world bible. |
+| 68 | **Thread** | A nested conversation branching off from a message in a channel. Threads allow sidebar discussions without cluttering the main channel. Dramatically useful for showing private conversations happening in parallel to public ones. |
+| 69 | **Typing Indicator** | The animated "..." or "[user] is typing" signal that appears when someone is composing a message. In WE OUT HERE, a typing indicator that starts, stops, starts again, and then resolves into a single-word message is a complete dramatic beat. |
+| 70 | **Read Receipt** | A signal (checkmark, timestamp, or "seen by") indicating that a message has been viewed by its recipient. Dramatically loaded: a message that's been read but not replied to is a silence that speaks. |
+| 71 | **@ Mention** | Tagging a specific user in a message to direct their attention. In the show, an @mention is an act of accountability, confrontation, or passive-aggression depending on context. |
+| 72 | **Emoji React** | A response to a message consisting of a single emoji rather than a text reply. In bl0ng's communication style, an emoji react IS the reply — it says everything he refuses to say in words. A skull emoji (💀) on a message about a client contract is bl0ng's entire review. |
+| 73 | **DM (Direct Message)** | A private, one-on-one message between two users outside of any shared channel. DMs are where the trio says what they won't say in the group — alliances, complaints, vulnerable admissions. DMs are secrets the audience is allowed to overhear. |
+| 74 | **Bot** | An automated agent within the platform that performs functions (scheduling, reminders, moderation, custom commands). The trio's platform may include a bot that becomes a comedic character in its own right — e.g., a malfunctioning meeting-scheduler bot that keeps creating events no one attends. |
+| 75 | **Server** | The platform's term for a self-contained community within `Backchannel` (equivalent to a Discord server). Cataclysm Consulting's server is the company's entire digital infrastructure — its office, its culture, its institutional memory, and eventually its crime scene. |
+| 76 | **AI Consultancy** | The fictional business model of Cataclysm Consulting: offering AI strategy, implementation, and advisory services to clients. The trio may or may not actually understand AI — they understand how to talk about it convincingly enough to get contracts. The gap between their pitch and their competence is a core comedic engine. |
+| 77 | **Prompt Engineering** | The practice of designing inputs (prompts) for large language models to produce desired outputs. In the show's world, this is likely one of the services Cataclysm Consulting offers — or claims to offer. The term itself has comedic potential: it sounds like engineering but is more like persuasion. |
+
+---
+
+## §7 — Project Operations & Document Terms
+
+| # | Term | Definition |
+|---|---|---|
+| 78 | **Canon** | The authoritative, immutable set of facts about WE OUT HERE: title, characters, format, episode titles, season arc, tone, and writerly constraints. Defined in `00_admin/canon_lock.md`. Canon cannot be altered without the amendment protocol described therein. Everything else in the project is either elaboration (adding detail that's consistent with canon) or operational (governing how work gets done). |
+| 79 | **Canon Lock** | The state of a creative value being fixed and immutable. Also the name of the governing document: `canon_lock.md` (WOH-ADMIN-000). When something is "canon-locked," it cannot be changed by any agent without the formal amendment protocol. |
+| 80 | **Soft Lock** | A value that is assumed and treated as canon by default but may be changed with documented approval from specified principals. Soft locks are listed in canon_lock.md §2. Examples: company name ("Cataclysm Consulting"), production entity name, target production start date. |
+| 81 | **Wave** | A phase of deliverable production in the WE OUT HERE project schedule. There are four waves: Foundation (Weeks 1–3), Creative Build (Weeks 4–8), Pre-Production (Weeks 9–14), Post-Production & Release (Weeks 15–22). Each wave has entry criteria, assigned deliverables, and a gate review. |
+| 82 | **Wave Gate** | A checkpoint between waves where all assigned deliverables are reviewed for completeness, quality, and canon compliance. A wave gate must be cleared before the next wave begins. The Wave 3 gate is the GO/NO-GO decision point for production. |
+| 83 | **Subagent (Agent)** | A specialized autonomous unit responsible for a defined scope of deliverables within the project. There are 19 agents defined in the studio manifest. Each has a name (e.g., bible_agent, finance_agent), a scope, and assigned deliverables. |
+| 84 | **Principal** | A key decision-maker with authority to approve deliverables and resolve disputes. Principals are the showrunner and the executive producer. The founding team. |
+| 85 | **Showrunner** | The lead creative authority on the project. Owns the canon lock document. Has final say on all creative decisions. May also serve as head writer and/or director. |
+| 86 | **EP (Executive Producer)** | The business and financing lead. Final authority on budgets, deals, and business strategy. Co-manages the production entity with the showrunner. |
+| 87 | **ops_agent** | The central coordination agent. Maintains the studio manifest, risk register, assumptions document, glossary, timelines, and infrastructure documents. Routes all inter-agent communication. The nervous system of the project. |
+| 88 | **continuity_agent** | The cross-cutting quality role responsible for auditing all deliverables for consistency with canon and with each other. Catches contradictions, drift, and formatting violations. Has no deliverables of their own — their work product is the integrity of everyone else's. |
+| 89 | **qc_agent** | The quality control role responsible for formatting compliance, cross-reference accuracy, and surface-level review before deliverables enter the approval chain. Works in tandem with continuity_agent. |
+| 90 | **Kill List** | A maintained document (`03_writers_room/kill_list.md`) containing ideas, jokes, scenes, storylines, and characters that have been cut from the current season but are preserved for potential future use. The kill list prevents scope creep by giving rejected ideas a home instead of forcing them back into scripts. |
+| 91 | **Story Break** | A writers' room session (and resulting document) in which an episode's story structure is mapped: A-story, B-story, scene order, act breaks, emotional beats, cold open, and button. Story breaks are completed before scripts are drafted. |
+| 92 | **Document ID** | A unique identifier assigned to every project deliverable, following the format `WOH-[DIR]-[NUM]`. Examples: WOH-ADMIN-000 (canon_lock.md), WOH-ADMIN-001 (studio_manifest.md). Used for cross-referencing and version tracking. |
+
+---
+
+## §8 — Industry & Distribution Terms
+
+| # | Term | Definition |
+|---|---|---|
+| 93 | **Streamer** | A digital platform that distributes content via internet streaming. In the context of WE OUT HERE's distribution strategy: Hulu, Peacock, Max, Amazon, Apple TV+, Roku Channel, and similar platforms. The primary target buyers for the completed series. |
+| 94 | **Festival Premiere** | The first public screening of a completed episode or series at a recognized film/television festival. Generates press coverage, critical validation, and buyer interest. WE OUT HERE targets TV-specific festivals (SeriesFest, Series Mania) and broader festivals with TV tracks (Sundance, SXSW, Tribeca). |
+| 95 | **Packaging** | The process of assembling the key creative elements (script, director, cast, producer) into a cohesive pitch to financiers and distributors. A "packaged" project has attached talent and is ready for financing conversations. |
+| 96 | **Attachment** | A formal or semi-formal commitment from a talent (actor, director, producer) to participate in a project, contingent on financing. "Attached" means committed but not yet contracted; "signed" means contracted. |
+| 97 | **EPK (Electronic Press Kit)** | A digital package of promotional materials — synopsis, cast/crew bios, stills, clips, poster art, press release — distributed to media for coverage. The modern equivalent of a physical press kit. |
+| 98 | **Needle Drop** | The use of a pre-existing, recognizable song in a film or TV show. Needle drops are expensive to license and unlikely to be within WE OUT HERE's budget. Original score and library music are assumed instead. |
+| 99 | **Showrunner-Director** | A principal who serves as both showrunner (lead creative/writer) and director of some or all episodes. Common at indie budget levels where consolidating these roles reduces headcount. A risk factor for burnout (see risk_register.md R-ORG-001). |
+| 100 | **New Media** | In SAG-AFTRA contract terminology: content produced primarily for distribution on the internet or new media platforms, with budgets below specific thresholds. Qualifies for reduced rates and modified terms under the SAG-AFTRA New Media Agreement. WE OUT HERE's assumed union framework. |
+
+---
+
+## §9 — Quick Reference: Episode Titles
+
+For convenience, the six episode titles and their arc positions. Canonical source: `canon_lock.md` §1.6.
+
+| Code | Title (exact) | Arc Position |
+|---|---|---|
+| S01E01 | "Don't Send That" | Mania / inciting chaos |
+| S01E02 | "Terms of Abuse" | Fragile success / false legitimacy |
+| S01E03 | "The Manic Defense" | Ethical drift / psychological escalation |
+| S01E04 | "Contain Me Daddy" | Containment failure / cracks visible |
+| S01E05 | "The Superego Collapse" | Ironic collapse / moral infrastructure fails |
+| S01E06 | "Let Him Cook()" | Exposure to consequences / reckoning |
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| 1.0.0 | 2026-04-10 | ops_agent | Initial creation — 100 terms across 9 sections covering characters, creative terms, production, psychology, business, technology, operations, and industry |
+
+---
+
+*Language is infrastructure. If we don't share a vocabulary, we can't share a vision. When in doubt about what a term means in this project, check here first. If it's not here, propose an addition to ops_agent.*
+
+</script>
+<script type="text/markdown" id="raw-risk_register">
+# WE OUT HERE — Risk Register
+
+**Document ID:** WOH-ADMIN-004  
+**Version:** 1.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Responsible Agent:** ops_agent  
+**Status:** Draft  
+**Classification:** Internal — All Principals
+
+---
+
+## Purpose
+
+This document identifies, assesses, and tracks all known risks to the WE OUT HERE project. Every risk is scored, assigned an owner, and paired with a mitigation strategy. The register is reviewed at every wave gate and updated as risks emerge, evolve, or are retired.
+
+**Governance:** ops_agent maintains this register. Risk owners are responsible for executing mitigation strategies. Showrunner and EP are the final escalation point for any risk rated Critical (score ≥ 16).
+
+**Canon Reference:** All risks must be assessed against canon values in `00_admin/canon_lock.md` and assumptions in `00_admin/assumptions.md`.
+
+---
+
+## Risk Scoring Methodology
+
+### Likelihood Scale
+
+| Score | Label | Definition |
+|---|---|---|
+| 1 | Rare | Unlikely to occur; no precedent in comparable projects |
+| 2 | Unlikely | Could occur but would require multiple failures or unlikely conditions |
+| 3 | Possible | Has occurred in comparable projects; plausible under current conditions |
+| 4 | Likely | More probable than not given current project conditions |
+| 5 | Almost Certain | Expected to occur unless proactive intervention is taken |
+
+### Impact Scale
+
+| Score | Label | Definition |
+|---|---|---|
+| 1 | Negligible | Minor inconvenience; absorbed within existing buffers |
+| 2 | Minor | Some rework or delay; does not affect critical path or deliverables |
+| 3 | Moderate | Noticeable schedule delay, budget impact, or quality reduction; requires management attention |
+| 4 | Major | Significant threat to project timeline, budget, or creative integrity; requires principal intervention |
+| 5 | Critical | Project-threatening; could result in cancellation, legal liability, or fundamental creative failure |
+
+### Risk Score Matrix
+
+**Risk Score = Likelihood × Impact**
+
+|  | **Impact 1** | **Impact 2** | **Impact 3** | **Impact 4** | **Impact 5** |
+|---|---|---|---|---|---|
+| **Likelihood 5** | 5 (Med) | 10 (High) | 15 (High) | 20 (Critical) | 25 (Critical) |
+| **Likelihood 4** | 4 (Low) | 8 (Med) | 12 (High) | 16 (Critical) | 20 (Critical) |
+| **Likelihood 3** | 3 (Low) | 6 (Med) | 9 (Med) | 12 (High) | 15 (High) |
+| **Likelihood 2** | 2 (Low) | 4 (Low) | 6 (Med) | 8 (Med) | 10 (High) |
+| **Likelihood 1** | 1 (Low) | 2 (Low) | 3 (Low) | 4 (Low) | 5 (Med) |
+
+### Response Priority
+
+| Score Range | Priority | Action |
+|---|---|---|
+| 1–4 | **Low** | Monitor; review at wave gates |
+| 5–9 | **Medium** | Active mitigation; review monthly |
+| 10–15 | **High** | Escalate to principals; active management required |
+| 16–25 | **Critical** | Immediate principal attention; may trigger GO/NO-GO reassessment |
+
+---
+
+## §1 — Creative Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-CRE-001 | **Tone failure — show reads as mean-spirited or nihilistic rather than darkly humane** | 3 | 5 | 15 | Tone guide established in Wave 1; continuity_agent reviews all scripts for tone compliance; table reads with sensitivity focus; showrunner as final tone arbiter. Ensure every episode has at least one emotionally true moment (per canon_lock.md §1.8.4). | showrunner | Open |
+| R-CRE-002 | **Script delays — writers cannot deliver 6 scripts on schedule** | 4 | 4 | 16 | Staggered deadlines with 2-week buffer between episodes; story breaks completed before drafting begins; showrunner can step in to draft/rewrite; maintain a "script emergency" contingency of 2 additional weeks in schedule. | showrunner + writers_room_agent | Open |
+| R-CRE-003 | **Cast chemistry failure — the trio does not generate convincing comedic and emotional dynamics** | 3 | 5 | 15 | Extensive chemistry reads during casting; multi-round callback process; consider workshopping key scenes before final casting decisions; pilot/proof-of-concept shoot as chemistry test. | casting_agent + showrunner | Open |
+| R-CRE-004 | **Screenlife content is visually boring or narratively inert** | 3 | 4 | 12 | Dedicated UI/UX designer on creative team; prototype screenlife sequences early in pre-production; study comparable screenlife work (SEARCHING, UNFRIENDED, SUCCESSION phone scenes); build visual grammar for chat dynamics. | brand_agent + production_agent | Open |
+| R-CRE-005 | **Surreal inserts feel disconnected from the rest of the show** | 3 | 3 | 9 | Establish clear surreal-insert grammar in tone guide and show format spec; each surreal sequence must be psychologically motivated (externalizing a character's internal state); review surreal sequences in story breaks before scripting. | showrunner + bible_agent | Open |
+| R-CRE-006 | **Scope creep — writers want more than 6 episodes or 30-minute runtime** | 3 | 3 | 9 | Episode count and runtime are immutable canon (canon_lock.md §1.1); kill_list.md captures overflow ideas for potential Season 2; showrunner enforces at story break stage. | showrunner + writers_room_agent | Open |
+| R-CRE-007 | **Psychoanalytic terminology alienates general audience** | 2 | 3 | 6 | Show uses psychological concepts through behavior, not exposition; no character lectures the audience on theory; jargon is deployed ironically or as character defense; test with non-clinical audience in table reads. | showrunner + script_agent | Open |
+
+---
+
+## §2 — Financial Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-FIN-001 | **Funding gap — unable to close full financing before production start** | 4 | 5 | 20 | Begin investor outreach in Wave 2; model three budget tiers (micro $800K, indie $1.5M, lower-mid $3M); identify bridge financing options; proof-of-concept/pilot as financing tool; maintain relationships with multiple funding sources simultaneously. | finance_agent + EP | Open |
+| R-FIN-002 | **Budget overrun during production** | 3 | 4 | 12 | 10% contingency held in budget; daily cost reporting on set; line producer empowered to flag overspend immediately; pre-negotiated overtime caps; identify non-essential line items that can be cut mid-production if needed. | finance_agent + production_agent | Open |
+| R-FIN-003 | **Cash flow crunch — expenses due before revenue or investor funds arrive** | 4 | 4 | 16 | Cash flow projection modeled in Wave 2; establish line of credit or bridge loan pre-production; stagger vendor payments where possible; negotiate 30/60/90-day terms with key vendors; maintain 4-week operating runway at all times. | finance_agent | Open |
+| R-FIN-004 | **Tax incentive fails to materialize or is delayed** | 3 | 3 | 9 | Apply early in process; have backup location plan that doesn't depend on incentive; model budget both with and without incentive; consult production incentive specialist. | finance_agent + production_agent | Open |
+| R-FIN-005 | **VFX costs exceed projections due to scope growth in surreal inserts** | 3 | 3 | 9 | Cap surreal insert screen time at 10% in production plan; get VFX bids before finalizing scripts; build VFX budget as a fixed envelope, not open-ended; showrunner has authority to simplify surreal sequences to fit budget. | finance_agent + post_agent | Open |
+| R-FIN-006 | **No platform acquisition — show must self-distribute, significantly reducing revenue** | 3 | 4 | 12 | Build festival strategy as a parallel track; budget for self-distribution scenario; explore TVOD/AVOD platforms as fallback; consider hybrid release (free pilot + paid season); maintain realistic revenue expectations in investor communications. | finance_agent + distribution_agent | Open |
+
+---
+
+## §3 — Legal Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-LEG-001 | **IP ownership dispute — contributor claims ownership of creative material** | 2 | 5 | 10 | Execute IP assignment and work-for-hire agreements with ALL contributors before work begins; chain_of_title.md is Wave 1 priority; legal_agent reviews all agreements before execution; no handshake deals. | legal_agent | Open |
+| R-LEG-002 | **E&O insurance denial or excessive premium due to satirical content** | 2 | 4 | 8 | Scripts reviewed by entertainment attorney for defamation, trademark, and right-of-publicity risks before E&O application; fictionalize all real-world references; maintain "fictional platform" rule per canon; get E&O broker involved early. | legal_agent | Open |
+| R-LEG-003 | **Trade dress claim from Discord, Slack, or similar platform** | 2 | 4 | 8 | Fictional chat platform UI must be sufficiently differentiated; engage IP attorney to review UI designs for trade dress risk; document creative decisions that distinguish the platform; include disclaimer in credits. | legal_agent + brand_agent | Open |
+| R-LEG-004 | **Real tech company sends cease-and-desist over satirical depiction** | 2 | 3 | 6 | Use only fictional company names in scripts; avoid specific, identifiable internal processes or trade secrets of real companies; standard satire/parody analysis by legal counsel; E&O insurance covers defense costs. | legal_agent + script_agent | Open |
+| R-LEG-005 | **SAG-AFTRA New Media agreement terms change or project does not qualify** | 3 | 3 | 9 | Monitor SAG-AFTRA agreement updates; consult entertainment labor attorney; model budget for both New Media and standard Low Budget agreement; ensure production budget qualifies under current thresholds. | legal_agent + finance_agent | Open |
+| R-LEG-006 | **Entity formation delays — LLC not formed before contractor engagement begins** | 3 | 4 | 12 | Prioritize entity formation in Wave 1; engage formation service (e.g., Northwest Registered Agent) immediately; do NOT execute any agreements or spend any project funds until entity exists; EIN application filed same week as formation. | legal_agent + EP | Open |
+| R-LEG-007 | **Music licensing clearance failure — desired tracks unavailable or unaffordable** | 3 | 2 | 6 | Prioritize original score and commissioned music; use library music as fallback; never write a scene that depends on a specific licensed track; music supervisor or legal_agent handles clearances well in advance of lock. | legal_agent + post_agent | Open |
+
+---
+
+## §4 — Production Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-PRD-001 | **Location loss — key practical location becomes unavailable during or before shoot** | 3 | 3 | 9 | Scout backup locations for all key practicals; lock locations with signed agreements and deposits well before shoot; build location flexibility into scripts where possible; standing sets as controlled environment fallback. | production_agent | Open |
+| R-PRD-002 | **Technical pipeline failure — screenlife capture workflow doesn't integrate with live-action post pipeline** | 3 | 4 | 12 | Prototype the full capture-to-edit pipeline in pre-production with at least one test scene; hire or consult with screenlife-experienced DP or technical supervisor; define pipeline in `13_post/edit_workflow.md` before production begins. | production_agent + post_agent | Open |
+| R-PRD-003 | **Schedule overrun — shoot days per episode exceed 5-day estimate** | 3 | 3 | 9 | Build 2 buffer days into overall schedule; block shoot to maximize efficiency; separate screenlife capture days (smaller crew, faster setup) from live-action days; AD empowered to flag schedule risk daily. | production_agent | Open |
+| R-PRD-004 | **Key crew member becomes unavailable mid-production** | 2 | 4 | 8 | Identify backup candidates for all department heads in pre-production; cross-train where feasible; maintain updated crew contact list; day-player pool established for below-the-line positions. | hr_agent + production_agent | Open |
+| R-PRD-005 | **Set construction delays or cost overruns** | 3 | 3 | 9 | Begin set construction planning in Wave 3; get multiple bids from construction vendors; build schedule buffer for construction; have fallback plan to dress practical locations instead of building from scratch. | production_agent | Open |
+| R-PRD-006 | **Weather or force majeure disrupts exterior shooting** | 2 | 3 | 6 | Minimize exterior shooting in schedule; designate cover sets (interior scenes that can be shot on any day); production insurance covers weather delays above deductible threshold. | production_agent | Open |
+
+---
+
+## §5 — Market & Distribution Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-MKT-001 | **Platform rejection — streamers pass on the format as too niche, too experimental, or too similar to existing shows** | 3 | 4 | 12 | Target multiple platforms simultaneously; emphasize unique hybrid format as differentiator; festival premiere as proof-of-concept and press generator; pilot episode as lower-risk entry point for buyers; tailor pitch materials to each platform's brand. | distribution_agent + development_agent | Open |
+| R-MKT-002 | **Audience discovery failure — show doesn't find its audience despite quality** | 3 | 4 | 12 | Build audience pre-release through social media, meme-native marketing, and tech/comedy press; festival strategy generates early word-of-mouth; target internet-native communities directly; consider releasing pilot for free to build grassroots audience. | marketing_agent + distribution_agent | Open |
+| R-MKT-003 | **Competing show launches with similar premise (tech startup satire, screenlife comedy)** | 2 | 3 | 6 | Monitor competitive landscape; emphasize WE OUT HERE's distinctive elements (psychocomedy angle, defense-mechanism-driven comedy, hybrid format); differentiate aggressively in marketing; a strong show survives competition — focus on quality. | marketing_agent | Open |
+| R-MKT-004 | **Festival rejection — pilot/season not selected for target festivals** | 3 | 3 | 9 | Submit to 10+ festivals across narrative, comedy, and TV-specific categories; stagger submission timeline; have backup festival tier; festival rejection doesn't prevent platform sales — maintain parallel outreach. | distribution_agent | Open |
+| R-MKT-005 | **Streaming market contraction reduces acquisition budgets and appetite for indie series** | 3 | 4 | 12 | Model conservative revenue expectations; build self-distribution capability as genuine alternative (not just fallback); keep production costs low enough that the project can be profitable at indie-scale acquisition prices; explore FAST channels and AVOD. | distribution_agent + finance_agent | Open |
+
+---
+
+## §6 — Organizational Risks
+
+| ID | Risk | L | I | Score | Mitigation | Owner | Status |
+|---|---|---|---|---|---|---|---|
+| R-ORG-001 | **Principal burnout — small founding team overextended across too many roles** | 4 | 4 | 16 | Identify role consolidation early and plan workload accordingly; hire/contract key support roles (line producer, production coordinator) before production; enforce reasonable work hours in pre-production; build in recovery time between waves. | ops_agent + EP | Open |
+| R-ORG-002 | **Communication breakdown between agents/departments** | 3 | 3 | 9 | Centralized coordination through ops_agent; wave gate reviews ensure alignment; continuity_agent performs cross-document audits; standardized communication formats per studio_manifest.md §6.4; weekly status checks during active waves. | ops_agent | Open |
+| R-ORG-003 | **Canon drift — deliverables gradually deviate from canon values without anyone noticing** | 3 | 4 | 12 | canon_lock.md (WOH-ADMIN-000) established as supreme authority; continuity_agent audits all deliverables at wave gates; canon checklist (canon_lock.md §3.2) applied to every document before approval; violation severity framework ensures critical drift is caught immediately. | continuity_agent + ops_agent | Open |
+| R-ORG-004 | **Key creative disagreement between principals** | 2 | 4 | 8 | Conflict resolution protocol in studio_manifest.md §6.3; showrunner has final creative authority per canon_lock.md; EP has final business authority; operating agreement should include dispute resolution and deadlock provisions. | showrunner + EP | Open |
+| R-ORG-005 | **Staffing gaps — unable to hire qualified crew at indie budget rates** | 3 | 3 | 9 | Begin recruitment early in Wave 3; leverage festival/indie community networks; offer meaningful credits and creative collaboration as non-monetary value; consider emerging talent (recent graduates, career-changers) for junior positions; competitive day rates within budget tier. | hr_agent | Open |
+
+---
+
+## §7 — Risk Summary Dashboard
+
+### By Priority Level
+
+| Priority | Count | Risk IDs |
+|---|---|---|
+| **Critical (16–25)** | 4 | R-FIN-001, R-CRE-002, R-FIN-003, R-ORG-001 |
+| **High (10–15)** | 10 | R-CRE-001, R-CRE-003, R-CRE-004, R-FIN-002, R-FIN-006, R-LEG-001, R-LEG-006, R-PRD-002, R-MKT-001, R-MKT-002, R-MKT-005, R-ORG-003 |
+| **Medium (5–9)** | 14 | R-CRE-005, R-CRE-006, R-CRE-007, R-FIN-004, R-FIN-005, R-LEG-002, R-LEG-003, R-LEG-005, R-LEG-007, R-PRD-001, R-PRD-003, R-PRD-005, R-MKT-003, R-MKT-004, R-ORG-002, R-ORG-005 |
+| **Low (1–4)** | 3 | R-LEG-004, R-PRD-004, R-PRD-006, R-ORG-004 |
+
+### Top 5 Risks by Score
+
+| Rank | ID | Risk | Score | Owner |
+|---|---|---|---|---|
+| 1 | R-FIN-001 | Funding gap | 20 | finance_agent + EP |
+| 2 | R-CRE-002 | Script delays | 16 | showrunner + writers_room_agent |
+| 3 | R-FIN-003 | Cash flow crunch | 16 | finance_agent |
+| 4 | R-ORG-001 | Principal burnout | 16 | ops_agent + EP |
+| 5 | R-CRE-001 | Tone failure | 15 | showrunner |
+
+### By Category
+
+| Category | Count | Avg Score | Highest Risk |
+|---|---|---|---|
+| Creative | 7 | 11.7 | R-CRE-002 (16) |
+| Financial | 6 | 13.0 | R-FIN-001 (20) |
+| Legal | 7 | 8.4 | R-LEG-006 (12) |
+| Production | 6 | 8.8 | R-PRD-002 (12) |
+| Market | 5 | 10.2 | R-MKT-001 / R-MKT-002 / R-MKT-005 (12) |
+| Organizational | 5 | 10.8 | R-ORG-001 (16) |
+
+---
+
+## §8 — Risk Review Schedule
+
+| Review Point | Timing | Focus | Owner |
+|---|---|---|---|
+| **Wave 1 Gate** | End of Week 3 | Creative risks (tone, canon), legal risks (entity, IP), organizational risks | ops_agent + showrunner |
+| **Wave 2 Gate** | End of Week 8 | Financial risks (funding, cash flow), script risks, market risks | ops_agent + EP + finance_agent |
+| **Wave 3 Gate (GO/NO-GO)** | End of Week 14 | ALL risks — comprehensive review before production commitment | All principals |
+| **Weekly during production** | Production weeks | Production risks, schedule risks, financial burn rate | production_agent + ops_agent |
+| **Wave 4 Gate** | Post-production entry | Post risks, distribution risks, market risks | ops_agent + post_agent + distribution_agent |
+| **Pre-delivery** | Before final delivery | Remaining legal, market, and organizational risks | ops_agent + legal_agent |
+
+---
+
+## §9 — Retired / Resolved Risks
+
+| ID | Risk | Resolution | Date | Resolved By |
+|---|---|---|---|---|
+| *(none yet)* | | | | |
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| 1.0.0 | 2026-04-10 | ops_agent | Initial creation — 36 risks across 6 categories, scoring methodology, summary dashboard, review schedule |
+
+---
+
+*Risk is not something to be afraid of. It's something to be mapped. This register exists so that when something goes wrong — and something always goes wrong — we've already thought about it once before it happened.*
+
+</script>
+<script type="text/markdown" id="raw-studio_manifest">
+# WE OUT HERE — Studio Operations Manifest
+
+**Document ID:** WOH-ADMIN-001  
+**Version:** 2.0.0  
+**Created:** 2026-04-10  
+**Last Updated:** 2026-04-10  
+**Classification:** Internal — All Principals  
+**Maintained by:** ops_agent
+
+---
+
+## 1. Project Identity
+
+| Field | Value |
+|---|---|
+| **Title** | WE OUT HERE |
+| **Format** | 6 x 30 min episodes, Season 1 |
+| **Genre** | Single-camera dark sitcom / tech psychocomedy |
+| **Hybrid Style** | Desktop realism + live action + surreal insert sequences |
+| **Tone** | Smart, internet-literate, psychologically sharp, humane, darkly funny |
+| **Package State** | Current package manifest aligned to required deliverable set on disk |
+
+### Logline
+
+Three burned-out technologists launch a chaotic AI consultancy from `Backchannel` and try to bootstrap legitimacy through manic hustle, irony, pseudo-legal improvisation, and memes. Their friendship becomes the failed holding environment that keeps the company alive while making everyone less stable.
+
+### Main Characters
+
+| Handle | Archetype | Canon Notes |
+|---|---|---|
+| **twinkle.puss** | The impulsive visionary | Male; use he/him pronouns in all project materials unless an intentional in-scene misread is being dramatized. |
+| **bl0ng** | The failed superego | Moral realist hiding concern inside irony, sarcasm, and reaction-image logic. |
+| **ariane.emory** | The detached meta-observer | Hyper-articulate systems thinker whose distance is both gift and defense. |
+
+### Season Arc
+
+**Mania -> fragile success -> ethical drift -> containment failure -> ironic collapse -> exposure to consequences**
+
+### Episode List
+
+| # | Title | Arc Position |
+|---|---|---|
+| 1 | Don't Send That | Mania / inciting chaos |
+| 2 | Terms of Abuse | Fragile success / false legitimacy |
+| 3 | The Manic Defense | Ethical drift / psychological escalation |
+| 4 | Contain Me Daddy | Containment failure / cracks visible |
+| 5 | The Superego Collapse | Ironic collapse / moral infrastructure fails |
+| 6 | Let Him Cook | Exposure to consequences / reckoning |
+
+---
+
+## 2. Package State Snapshot
+
+This manifest supersedes the earlier 125-deliverable baseline. It reflects the current intended package structure and only the deliverables required by the present project build.
+
+| Area | Required | Present | Status |
+|---|---:|---:|---|
+| `00_admin` | 6 | 6 | Complete |
+| `01_development` | 9 | 9 | Complete |
+| `02_scripts` | 9 | 9 | Complete |
+| `03_writers_room` | 6 | 6 | Complete |
+| `04_brand` | 6 | 6 | Complete |
+| `05_marketing` | 10 | 10 | Complete |
+| `06_press_kit` | 9 | 9 | Complete |
+| `07_website` | 15 | 15 | Complete |
+| `08_casting` | 9 | 9 | Complete |
+| `09_hr_recruiting` | 9 | 9 | Complete |
+| `10_finance` | 8 | 8 | Complete |
+| `11_legal` | 11 | 11 | Complete |
+| `12_production` | 11 | 11 | Complete |
+| `13_post` | 6 | 6 | Complete |
+| `14_distribution` | 6 | 6 | Complete |
+| `15_business_dev` | 5 | 5 | Complete |
+| `16_ops` | 6 | 6 | Complete |
+| **Total** | **141** | **141** | **Complete** |
+
+**Status rule:** `Completed` means the required file or required directory is present in the package now. It does not by itself imply creative lock, legal approval, or production readiness.
+
+---
+
+## 3. Deliverable Index
+
+### 00_admin — Project Administration
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `studio_manifest.md` | ops_agent | Completed |
+| `master_schedule.md` | ops_agent | Completed |
+| `assumptions.md` | ops_agent | Completed |
+| `risk_register.md` | ops_agent | Completed |
+| `project_glossary.md` | ops_agent | Completed |
+| `canon_lock.md` | ops_agent | Completed |
+
+### 01_development — Development
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `series_logline_variants.md` | development_agent | Completed |
+| `one_page_series_overview.md` | development_agent | Completed |
+| `pitch_treatment.md` | development_agent | Completed |
+| `season_bible.md` | development_agent | Completed |
+| `character_bible.md` | development_agent | Completed |
+| `world_rules.md` | development_agent | Completed |
+| `tonal_comps.md` | development_agent | Completed |
+| `target_audience.md` | development_agent | Completed |
+| `FAQ_for_partners.md` | development_agent | Completed |
+
+### 02_scripts — Scripts
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `s01e01_dont_send_that.md` | script_agent | Completed |
+| `s01e02_terms_of_abuse.md` | script_agent | Completed |
+| `s01e03_the_manic_defense.md` | script_agent | Completed |
+| `s01e04_contain_me_daddy.md` | script_agent | Completed |
+| `s01e05_the_superego_collapse.md` | script_agent | Completed |
+| `s01e06_let_him_cook.md` | script_agent | Completed |
+| `table_read_editions/` | script_agent | Completed |
+| `cold_open_bank.md` | script_agent | Completed |
+| `runner_jokes_and_callbacks.md` | script_agent | Completed |
+
+### 03_writers_room — Writers' Room
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `episode_beat_sheets.md` | writers_room_agent | Completed |
+| `scene_cards.md` | writers_room_agent | Completed |
+| `defense_mechanisms_tracker.md` | writers_room_agent | Completed |
+| `continuity_matrix.md` | writers_room_agent | Completed |
+| `emotional_arc_map.md` | writers_room_agent | Completed |
+| `writers_room_rules.md` | writers_room_agent | Completed |
+
+### 04_brand — Brand
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `title_strategy.md` | brand_agent | Completed |
+| `tagline_bank.md` | brand_agent | Completed |
+| `visual_identity.md` | brand_agent | Completed |
+| `key_art_briefs.md` | brand_agent | Completed |
+| `trailer_concept.md` | brand_agent | Completed |
+| `poster_copy.md` | brand_agent | Completed |
+
+### 05_marketing — Marketing
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `go_to_market_strategy.md` | marketing_agent | Completed |
+| `audience_personas.md` | marketing_agent | Completed |
+| `launch_plan.md` | marketing_agent | Completed |
+| `social_media_strategy.md` | marketing_agent | Completed |
+| `community_strategy.md` | marketing_agent | Completed |
+| `email_newsletter_plan.md` | marketing_agent | Completed |
+| `publicity_calendar.md` | marketing_agent | Completed |
+| `influencer_outreach.md` | marketing_agent | Completed |
+| `publicity_copy_bank.md` | marketing_agent | Completed |
+| `recruiting_publicity_copy.md` | marketing_agent | Completed |
+
+### 06_press_kit — Press Kit
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `press_kit.md` | press_agent | Completed |
+| `press_release.md` | press_agent | Completed |
+| `creator_statement.md` | press_agent | Completed |
+| `producer_statement.md` | press_agent | Completed |
+| `cast_and_character_sheet.md` | press_agent | Completed |
+| `episode_guide_public.md` | press_agent | Completed |
+| `media_QA.md` | press_agent | Completed |
+| `festival_synopsis_short_medium_long.md` | press_agent | Completed |
+| `boilerplates.md` | press_agent | Completed |
+
+### 07_website — Website
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `website_strategy.md` | web_agent | Completed |
+| `sitemap.md` | web_agent | Completed |
+| `website_copy.md` | web_agent | Completed |
+| `component_inventory.md` | web_agent | Completed |
+| `design_direction.md` | web_agent | Completed |
+| `homepage_wireframe.md` | web_agent | Completed |
+| `press_page_spec.md` | web_agent | Completed |
+| `casting_page_spec.md` | web_agent | Completed |
+| `jobs_page_spec.md` | web_agent | Completed |
+| `contact_page_spec.md` | web_agent | Completed |
+| `investor_page_spec.md` | web_agent | Completed |
+| `faq_page_spec.md` | web_agent | Completed |
+| `seo_metadata.md` | web_agent | Completed |
+| `structured_content_model.md` | web_agent | Completed |
+| `cms_plan.md` | web_agent | Completed |
+
+### 08_casting — Casting
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `casting_strategy.md` | casting_agent | Completed |
+| `series_regular_breakdowns.md` | casting_agent | Completed |
+| `recurring_roles.md` | casting_agent | Completed |
+| `day_player_breakdowns.md` | casting_agent | Completed |
+| `casting_call_copy.md` | casting_agent | Completed |
+| `audition_notice.md` | casting_agent | Completed |
+| `audition_sides.md` | casting_agent | Completed |
+| `chemistry_read_plan.md` | casting_agent | Completed |
+| `self_tape_instructions.md` | casting_agent | Completed |
+
+### 09_hr_recruiting — HR & Recruiting
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `org_chart.md` | hr_agent | Completed |
+| `staffing_plan.md` | hr_agent | Completed |
+| `job_descriptions.md` | hr_agent | Completed |
+| `recruiting_funnel.md` | hr_agent | Completed |
+| `onboarding_guide.md` | hr_agent | Completed |
+| `code_of_conduct.md` | hr_agent | Completed |
+| `anti_harassment_policy.md` | hr_agent | Completed |
+| `burnout_mitigation_plan.md` | hr_agent | Completed |
+| `remote_collaboration_policy.md` | hr_agent | Completed |
+
+### 10_finance — Finance
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `top_sheet_budget.md` | finance_agent | Completed |
+| `episodic_budget.md` | finance_agent | Completed |
+| `dev_budget.md` | finance_agent | Completed |
+| `cash_flow_schedule.md` | finance_agent | Completed |
+| `financing_strategy.md` | finance_agent | Completed |
+| `investor_memo.md` | finance_agent | Completed |
+| `recoupment_waterfall.md` | finance_agent | Completed |
+| `scenario_models.md` | finance_agent | Completed |
+
+### 11_legal — Legal
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `rights_and_chain_of_title.md` | legal_agent | Completed |
+| `entity_structure.md` | legal_agent | Completed |
+| `IP_strategy.md` | legal_agent | Completed |
+| `NDA_template.md` | legal_agent | Completed |
+| `writer_agreement_template.md` | legal_agent | Completed |
+| `contractor_agreement_template.md` | legal_agent | Completed |
+| `talent_release_template.md` | legal_agent | Completed |
+| `risk_memo.md` | legal_agent | Completed |
+| `errors_and_omissions_checklist.md` | legal_agent | Completed |
+| `clearance_guidelines.md` | legal_agent | Completed |
+| `fair_use_and_parody_guidance.md` | legal_agent | Completed |
+
+### 12_production — Production
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `production_plan.md` | production_agent | Completed |
+| `stripboard_assumptions.md` | production_agent | Completed |
+| `preliminary_schedule.md` | production_agent | Completed |
+| `location_strategy.md` | production_agent | Completed |
+| `art_department_plan.md` | production_agent | Completed |
+| `camera_and_capture_plan.md` | production_agent | Completed |
+| `sound_plan.md` | production_agent | Completed |
+| `wardrobe_plan.md` | production_agent | Completed |
+| `props_and_graphics_plan.md` | production_agent | Completed |
+| `VFX_and_screen_graphics_plan.md` | production_agent | Completed |
+| `production_workflows.md` | production_agent | Completed |
+
+### 13_post — Post
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `editorial_workflow.md` | post_agent | Completed |
+| `finishing_workflow.md` | post_agent | Completed |
+| `sound_post_plan.md` | post_agent | Completed |
+| `music_strategy.md` | post_agent | Completed |
+| `captions_and_accessibility.md` | post_agent | Completed |
+| `deliverables_spec.md` | post_agent | Completed |
+
+### 14_distribution — Distribution
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `distribution_strategy.md` | distribution_agent | Completed |
+| `streamer_pitch_targets.md` | distribution_agent | Completed |
+| `festival_targets.md` | distribution_agent | Completed |
+| `platform_release_paths.md` | distribution_agent | Completed |
+| `sales_positioning.md` | distribution_agent | Completed |
+| `partner_outreach_templates.md` | distribution_agent | Completed |
+
+### 15_business_dev — Business Development
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `partnership_ideas.md` | bizdev_agent | Completed |
+| `merch_strategy.md` | bizdev_agent | Completed |
+| `discord_community_plan.md` | bizdev_agent | Completed |
+| `sponsorship_fit.md` | bizdev_agent | Completed |
+| `ancillary_revenue.md` | bizdev_agent | Completed |
+
+### 16_ops — Operations
+
+| File | Responsible Agent | Status |
+|---|---|---|
+| `repo_structure.md` | ops_agent | Completed |
+| `file_naming_rules.md` | ops_agent | Completed |
+| `subagent_orchestration.md` | ops_agent | Completed |
+| `qa_checklists.md` | ops_agent | Completed |
+| `approval_workflow.md` | ops_agent | Completed |
+| `missing_items_report.md` | ops_agent | Completed |
+
+**Total Deliverables in Current Package:** 141 of 141 present.
+
+---
+
+## 4. Subagent Registry
+
+| Agent | Primary Scope | Directories | Current Required Count |
+|---|---|---|---:|
+| `ops_agent` | Manifest, scheduling, package controls, repository operations | `00_admin`, `16_ops` | 12 |
+| `development_agent` | Series development, canon support, partner-facing development docs | `01_development` | 9 |
+| `script_agent` | Season scripts, table-read package, cold opens, callback bank | `02_scripts` | 9 |
+| `writers_room_agent` | Beat sheets, scene cards, continuity and emotional tracking | `03_writers_room` | 6 |
+| `brand_agent` | Naming, visual identity, key art, trailer and poster positioning | `04_brand` | 6 |
+| `marketing_agent` | Audience, launch, community, publicity, recruiting copy | `05_marketing` | 10 |
+| `press_agent` | Press kit, release, statements, public-facing synopsis set | `06_press_kit` | 9 |
+| `web_agent` | Website strategy, specs, copy, metadata, CMS structure | `07_website` | 15 |
+| `casting_agent` | Role breakdowns, audition materials, chemistry-read plan | `08_casting` | 9 |
+| `hr_agent` | Staffing, recruiting, onboarding, conduct, burnout mitigation | `09_hr_recruiting` | 9 |
+| `finance_agent` | Budgets, finance planning, waterfall, investor memo, models | `10_finance` | 8 |
+| `legal_agent` | Rights, entity, templates, risk, clearance, parody guidance | `11_legal` | 11 |
+| `production_agent` | Planning, schedule, department strategy, workflows, capture | `12_production` | 11 |
+| `post_agent` | Editorial, finishing, sound, music, accessibility, delivery | `13_post` | 6 |
+| `distribution_agent` | Targeting, release paths, sales positioning, outreach | `14_distribution` | 6 |
+| `bizdev_agent` | Partnerships, merch, community monetization, ancillary revenue | `15_business_dev` | 5 |
+| `continuity_agent` | Canon enforcement and contradiction review | Cross-cutting | 0 |
+| `qc_agent` | Format, completeness, and handoff review | Cross-cutting | 0 |
+
+**Registry Note:** Review roles do not own deliverables directly; they gate package consistency.
+
+---
+
+## 5. Wave Schedule
+
+The package is already assembled across all planned waves. The schedule below remains the intended order of work, review, and future revision control.
+
+| Wave | Focus | Core Directories | Gate Condition | Current Package Status |
+|---|---|---|---|---|
+| **Wave 1** | Canon and operating foundation | `00_admin`, `01_development`, `03_writers_room`, `16_ops` | Canon locked, assumptions stated, operational rules in place | Complete |
+| **Wave 2** | Writing and creative packaging | `02_scripts`, `04_brand`, `06_press_kit` | Season package readable end-to-end; positioning coherent | Complete |
+| **Wave 3** | Audience, casting, staffing, financing, legal | `05_marketing`, `08_casting`, `09_hr_recruiting`, `10_finance`, `11_legal` | Go-to-market, staffing, finance, and legal scaffolding aligned | Complete |
+| **Wave 4** | Production-through-release execution | `07_website`, `12_production`, `13_post`, `14_distribution`, `15_business_dev` | Public release and operational follow-through package ready | Complete |
+
+**Revision Rule:** Future updates should follow the same dependency order even if only one file is changing. Canon changes propagate outward from Wave 1 materials before downstream documents are revised.
+
+---
+
+## 6. Communication Protocol
+
+### 6.1 Coordination Model
+
+All subagent coordination routes through `ops_agent`. Creative disputes resolve through showrunner authority. Business, legal, and finance conflicts escalate through the executive producer or equivalent principal owner.
+
+### 6.2 Canon Enforcement Rules
+
+1. `00_admin/canon_lock.md` is the operational canon lock reference.
+2. `01_development/season_bible.md`, `01_development/character_bible.md`, and `01_development/world_rules.md` are the primary creative sources of truth.
+3. `twinkle.puss` is male and uses he/him pronouns across scripts, casting, development, marketing, and press materials unless an intentional in-universe misread is explicitly staged.
+4. Character handles must remain exactly `twinkle.puss`, `bl0ng`, and `ariane.emory`.
+5. The title is written `WE OUT HERE` in formal materials.
+6. Episode file names and episode titles must remain aligned to the six-episode slate listed in Section 1.
+7. Any contradiction discovered downstream is flagged to `ops_agent` and `continuity_agent` before further drafting.
+
+### 6.3 Required Message Formats
+
+- `BLOCKED: [agent] - [deliverable] - [issue] - [dependency]`
+- `REVIEW REQUEST: [deliverable] - [requesting_agent] -> [reviewing_agent]`
+- `CANON FLAG: [deliverable] - [contradiction] - [source document]`
+- `APPROVED: [deliverable] - [approver] - [version]`
+
+### 6.4 Escalation Path
+
+| Issue Type | First Pass | Final Authority |
+|---|---|---|
+| Canon contradiction | `continuity_agent` | Showrunner |
+| Formatting / completeness failure | `qc_agent` | `ops_agent` |
+| Legal risk | `legal_agent` | Executive Producer / counsel |
+| Budget or staffing conflict | `finance_agent` / `hr_agent` | Executive Producer |
+| Production feasibility conflict | `production_agent` | Showrunner + Executive Producer |
+
+---
+
+## 7. Quality Standards
+
+| Standard | Requirement |
+|---|---|
+| **Format** | Markdown only unless a later ops rule explicitly allows another format |
+| **Naming** | Match `16_ops/file_naming_rules.md` exactly |
+| **Headers** | Each file should carry clear title, document metadata, and version state |
+| **Cross-References** | Use relative paths when citing another deliverable |
+| **Canon Accuracy** | No document may contradict `canon_lock.md` or the core development bibles |
+| **Audience Voice** | External-facing materials must preserve the show's smart, darkly funny, humane voice |
+| **Operational Clarity** | Internal docs should be concise, specific, and decision-useful |
+| **Completion Standard** | A required deliverable is not considered package-complete if it has been renamed, relocated, or split away from the approved structure |
+
+### Quality Gate Checks
+
+1. Correct file name and directory.
+2. No contradiction against locked canon.
+3. No stale references to the older baseline package.
+4. No missing reciprocal references where a workflow depends on another document.
+5. No public-facing copy that misgenders `twinkle.puss` or drifts from series tone.
+
+---
+
+## 8. Risk Summary
+
+| Risk | Current Level | Why It Matters | Mitigation |
+|---|---|---|---|
+| Canon drift across a now-complete package | Medium | More files means more places for contradictions to appear | Route all canon-affecting changes through `canon_lock.md` and continuity review |
+| Baseline confusion from older manifest structure | Medium | Teams may reference retired deliverable names | This manifest is the authoritative index; older baseline names are deprecated |
+| Public-facing tone inconsistency | Medium | Marketing, press, and web now span many assets | Cross-review external copy against `tonal_comps.md` and `target_audience.md` |
+| Legal and satire exposure | Medium | Tech-parody material can create clearance and defamation risk | Keep `11_legal` templates and guidance synchronized with script changes |
+| Schedule noise from package churn | Low | Renames or ad hoc file moves break review paths | Enforce `16_ops/repo_structure.md` and approval workflow before structural edits |
+
+---
+
+## 9. Version Control
+
+### 9.1 Versioning Scheme
+
+| Version | Meaning |
+|---|---|
+| `0.x` | Working draft |
+| `1.0.0` | First complete pass |
+| `1.x.0` | Substantive revision |
+| `1.x.y` | Minor fix or cleanup |
+| `2.0.0` | Structural rewrite or scope reset |
+| `F1.0` | Approved locked version |
+
+### 9.2 Git Protocol
+
+1. Track all required deliverables in the repository structure defined by `16_ops/repo_structure.md`.
+2. Use branch names in the form `wave-[n]/[agent]/[deliverable]` or `ops/[scope]` for package maintenance.
+3. Use commit messages in the form `[agent] [deliverable]: [reason for change]`.
+4. Do not force-push protected branches.
+5. Structural renames require `ops_agent` approval because they can invalidate the manifest and downstream references.
+
+### 9.3 Lock Rules
+
+- Canon lock changes require showrunner sign-off.
+- Legal template changes require legal review.
+- Finance model changes require executive producer review.
+- Public-facing copy changes require the owning functional lead plus final approver per Section 10.
+
+---
+
+## 10. Approval Chain
+
+| Category | Primary Approver | Secondary Review | Notes |
+|---|---|---|---|
+| Canon and development | Showrunner | `continuity_agent` | Includes `00_admin/canon_lock.md` and all `01_development` materials |
+| Scripts and writers' room | Showrunner / Head Writer | `continuity_agent` | Includes `02_scripts` and `03_writers_room` |
+| Brand, marketing, press, website | Executive Producer + Showrunner | Owning functional agent | Public-facing package must stay aligned across all four directories |
+| Casting and HR | Executive Producer | `legal_agent` as needed | Role language must remain canon-safe and compliant |
+| Finance and legal | Executive Producer | Counsel / `finance_agent` / `legal_agent` | Formal approvals required before outside circulation |
+| Production and post | Showrunner + Production Lead | `qc_agent` | Technical workflow changes must keep delivery viability intact |
+| Distribution and business development | Executive Producer | Showrunner | Positioning changes must match brand and release strategy |
+| Ops and infrastructure | `ops_agent` | `qc_agent` | Includes manifest, naming, repo, QA, and approval workflow docs |
+
+### Approval Workflow
+
+1. Owning agent updates the document and increments version.
+2. `qc_agent` checks naming, placement, formatting, and cross-references.
+3. `continuity_agent` reviews canon-sensitive documents.
+4. Primary approver signs off.
+5. `ops_agent` updates tracking documents if the change affects package structure or status.
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---|---|---|---|
+| 2.0.0 | 2026-04-10 | ops_agent | Rewrote manifest to match the current 141-deliverable package; removed the obsolete baseline inventory; updated statuses to reflect files and required directory present on disk |
+| 1.0.0 | 2026-04-10 | ops_agent | Initial manifest on older baseline structure |
+
+---
+
+*This document is the authoritative operations manifest for the current WE OUT HERE package. If any other index, checklist, or plan conflicts with the directory and file set listed here, this manifest controls until formally superseded.*
+
+</script>
+
+
+  <script>
+    function loadDoc(docId, btnElement) {
+      // Update active state
+      document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      
+      // Get raw markdown
+      const rawMarkdown = document.getElementById('raw-' + docId).textContent;
+      
+      // Parse to HTML
+      const html = marked.parse(rawMarkdown);
+      
+      // Inject
+      const viewer = document.getElementById('markdown-viewer');
+      viewer.innerHTML = html;
+      viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Load first doc automatically
+    document.addEventListener("DOMContentLoaded", () => {
+      const firstBtn = document.querySelector('.nav-button');
+      if (firstBtn) {
+        firstBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>
