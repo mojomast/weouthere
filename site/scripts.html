@@ -1,0 +1,2980 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scripts | WE OUT HERE</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    .script-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: sticky;
+      top: 100px;
+    }
+    .nav-button {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .nav-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(57,255,20,0.1) inset;
+    }
+    .nav-button.active {
+      background: rgba(57, 255, 20, 0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 10px rgba(57,255,20,0.2) inset;
+      font-weight: bold;
+    }
+    .content-area {
+      background: rgba(10, 13, 19, 0.8);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 40px;
+      min-height: 500px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+    .markdown-body {
+      font-family: 'Fira Code', monospace; /* Screenplay feel */
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+      color: var(--accent);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      font-family: 'Fira Code', monospace;
+      text-transform: uppercase;
+    }
+    .markdown-body h1 { color: #fff; font-size: 2rem; margin-top: 0; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+    .markdown-body strong { color: var(--accent-2); }
+    .markdown-body blockquote {
+      border-left: 4px solid var(--accent);
+      margin: 0;
+      padding-left: 16px;
+      color: var(--muted);
+      font-style: italic;
+    }
+    @media (max-width: 960px) {
+      .script-layout { grid-template-columns: 1fr; }
+      .sidebar { position: relative; top: 0; flex-direction: row; flex-wrap: wrap; }
+      .nav-button { flex: 1 1 auto; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="index.html">WE OUT HERE</a>
+    <nav class="site-nav">
+      <a href="about.html">About</a>
+      <a href="episodes.html" style="color: var(--accent); text-shadow: 0 0 8px var(--shadow);">Episodes</a>
+      <a href="characters.html">Characters</a>
+      <a href="press.html">Press</a>
+      <a href="casting.html">Casting</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="partners.html">Partners</a>
+      <a href="data-room.html" style="color: var(--accent);">[DATA ROOM]</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel page-hero" style="margin-bottom: 24px;">
+      <p class="section-label">Raw Production Materials</p>
+      <h1>EPISODE SCRIPTS</h1>
+      <p class="lede">Read the full season one teleplays. Formatted in raw markdown for the data room.</p>
+    </section>
+
+    <div class="script-layout">
+      <nav class="sidebar" id="script-sidebar">
+        <button class="nav-button" onclick="loadDoc('s01e01_dont_send_that', this)" id="btn-s01e01_dont_send_that">S01E01: Dont Send That</button>
+<button class="nav-button" onclick="loadDoc('s01e02_terms_of_abuse', this)" id="btn-s01e02_terms_of_abuse">S01E02: Terms Of Abuse</button>
+<button class="nav-button" onclick="loadDoc('s01e03_the_manic_defense', this)" id="btn-s01e03_the_manic_defense">S01E03: The Manic Defense</button>
+<button class="nav-button" onclick="loadDoc('s01e04_contain_me_daddy', this)" id="btn-s01e04_contain_me_daddy">S01E04: Contain Me Daddy</button>
+<button class="nav-button" onclick="loadDoc('s01e05_the_superego_collapse', this)" id="btn-s01e05_the_superego_collapse">S01E05: The Superego Collapse</button>
+<button class="nav-button" onclick="loadDoc('s01e06_let_him_cook', this)" id="btn-s01e06_let_him_cook">S01E06: Let Him Cook</button>
+
+      </nav>
+      <div class="content-area">
+        <div id="markdown-viewer" class="markdown-body">
+          <h2>Select a script from the left to read.</h2>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <strong>WE OUT HERE</strong>
+    </div>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="episodes.html">Episodes</a>
+      <a href="data-room.html" style="color: var(--accent);">Data Room</a>
+    </div>
+  </footer>
+
+  <script type="text/markdown" id="raw-s01e01_dont_send_that">
+# 02_scripts/s01e01_dont_send_that.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E01, establishing the trio, the show's desktop-realism grammar, and the accidental founding of `Cataclysm Consulting`.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/cold_open_bank.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"Don't Send That"
+
+## Logline
+After a professional humiliation, `twinkle.puss`, `bl0ng`, and `ariane.emory` jokingly invent an AI consultancy on Backchannel, then accidentally turn the bit into a real business when the one message that absolutely should not be sent gets an eager reply.
+
+## A/B/C Story Summary
+- A Story: The trio send a reckless outreach message to exhausted founder `Jessa Vale` and must invent `Cataclysm Consulting` fast enough to survive the reply.
+- B Story: `ariane.emory` tries to impose basic reality on the company's origin story while `bl0ng` converts panic into language that looks deliberate.
+- C Story: The group's private shame about layoffs, irrelevance, and money flips into shared grandiosity the second an audience appears.
+
+## Theme / Psychodynamic Function
+Shame becomes manic purpose the moment it can be socialized. The episode dramatizes the founding defense of the season: if a humiliating reality can be renamed quickly enough, it can feel like destiny.
+
+## Cold Open
+At a low-budget AI panel, `twinkle.puss` is forced to answer what he actually does for work. Before he can admit he is between jobs, he says he runs a consultancy. In the private Backchannel chat, `bl0ng` and `ariane.emory` watch him lie into existence.
+
+## Teaser
+Back at `ariane.emory`'s apartment and in Backchannel, the trio keep the bit alive long enough to name the company, build fake roles, and draft an outrageous outbound message to `Jessa Vale`. `ariane.emory` says, correctly, "don't send that." It sends.
+
+## Full Act Structure
+- Cold Open: Public humiliation flips into performative invention.
+- Teaser: The founding outreach message is sent and gets a response.
+- Act One: The trio invent `Cataclysm Consulting` in one night: name, bios, service list, and a reasons-to-believe deck.
+- Act Two: Their first client call goes unexpectedly well because `Jessa Vale` is desperate enough to value confidence over proof.
+- Act Three: A proposal goes out, roles harden, and the trio experience the first intoxicating evidence that their bit may be economically real.
+- Tag: A request for contracts arrives before they have any company infrastructure.
+
+## Scene List
+1. Cold open: panel humiliation.
+2. Alley outside event: the lie spreads.
+3. Ariane's apartment / Backchannel war room.
+4. Naming the company.
+5. Drafting bios and services.
+6. The outbound message.
+7. The reply.
+8. Overnight deck build.
+9. First client call with `Jessa Vale`.
+10. Post-call role assignment.
+11. Proposal sprint.
+12. Emotional crash tucked inside the joke.
+13. Proposal sent.
+14. Tag: legal paperwork enters the chat.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. COWORKING EVENT SPACE - DAY**
+
+A tasteful banner reads: `AI NOW: PRACTICAL TRUST FOR MODERN TEAMS`.
+
+The room is half full of founders, consultants, and people who look like they were promised wine. Onstage, a MODERATOR smiles the smile of someone who has never had to operationalize anything.
+
+Split screen with a private Backchannel channel: `#panel-hate`.
+
+`bl0ng` types from home. `ariane.emory` types from the back row.
+
+**MODERATOR**  
+And now we'd love to hear from members of the community. What are you building right now?
+
+`twinkle.puss` is not meant to answer. He already raised his hand ironically and was rewarded with a microphone.
+
+**twinkle.puss**  
+Emotionally? A bunker. Professionally?
+
+He clocks the room. The pause is too long.
+
+Backchannel:
+
+`bl0ng`: do not freestyle your employment status in public  
+`ariane.emory`: you can just say independent strategist  
+`bl0ng`: or medically mysterious
+
+**twinkle.puss**  
+I run a boutique AI consultancy.
+
+The room perks up. A couple of heads turn. Someone writes that down.
+
+Backchannel stops moving for a beat.
+
+**MODERATOR**  
+Amazing. Name?
+
+Backchannel explodes.
+
+`ariane.emory`: do not  
+`bl0ng`: pick a noun and an apocalypse  
+`ariane.emory`: twinkle.puss
+
+**twinkle.puss**  
+Cataclysm Consulting.
+
+There is a low appreciative murmur from exactly the kind of people who should know better.
+
+In the audience, `Jessa Vale`, polished and dead-eyed, glances up from her phone.
+
+**MODERATOR**  
+What do you specialize in?
+
+**twinkle.puss**  
+We help confused organizations adopt language models without spiritually flattening their people.
+
+`bl0ng` types:
+
+`bl0ng`: disgusting  
+`bl0ng`: strong line though
+
+**MODERATOR**  
+Would love your card after.
+
+`twinkle.puss` smiles like he has spent years preparing for this moment instead of ninety seconds.
+
+CUT TO BLACK.
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+**EXT. COWORKING SIDE ALLEY - DAY**
+
+`twinkle.puss` exits into harsh daylight, immediately hitting a vape that does not work.
+
+`ariane.emory` follows, controlled in the way people get when homicide is off the table.
+
+`ariane.emory`  
+You cannot debut a company because a stranger gave you a microphone.
+
+**twinkle.puss**  
+Counterpoint, I just did.
+
+`bl0ng` appears on speakerphone, tinny and delighted.
+
+**bl0ng (PHONE)**  
+The phrase `spiritually flattening their people` now has tenancy in my head.
+
+**ariane.emory**  
+We do not have a company.
+
+**twinkle.puss**  
+Jessa Vale looked at me like a drowning woman spotting driftwood made of jargon. We have a market.
+
+**ariane.emory**  
+You have a personality disorder with branding instincts.
+
+**twinkle.puss**  
+And yet. Market.
+
+He checks his phone. `Jessa Vale` has posted on a public Backchannel industry server: `Need outside help untangling internal AI rollout. team is frozen between legal / support / product. DM if you've actually done this.`
+
+`twinkle.puss` stops walking.
+
+**twinkle.puss**  
+She posted. Oh my God, she posted.
+
+**ariane.emory**  
+No.
+
+**twinkle.puss**  
+Yes.
+
+**ariane.emory**  
+No in the sense that I know your face right now.
+
+### SCENE 2
+
+**INT. ARIANE.EMORY'S APARTMENT - NIGHT**
+
+Laptop glow. Delivery containers. A legal pad with nothing useful on it.
+
+On Backchannel, a new private server exists: `cataclysm consulting`.
+
+Channels:
+
+- `#standing-on-business`
+- `#deck-emergency`
+- `#liability-sadness`
+- `#money-prayer`
+
+`twinkle.puss` has made a logo in a free design app. It is a comet made of serif text.
+
+**bl0ng**  
+It looks like a perfume that causes class action.
+
+**twinkle.puss**  
+Exactly. Premium risk.
+
+**ariane.emory**  
+If this is happening at all, we need one sentence that a sober person could say out loud.
+
+`twinkle.puss` is already drafting the message.
+
+On screen:
+
+`Jessa - saw your note. we do emergency AI adoption triage for teams stuck between legal fear and executive magical thinking. can jump on this fast if you need adults who speak both compliance and delusion.`
+
+**ariane.emory**  
+Don't send that.
+
+**bl0ng**  
+The adult line is overreaching in a way I respect but cannot insure.
+
+**twinkle.puss**  
+I can make it colder.
+
+He revises.
+
+`We run rapid AI implementation and governance sprints for teams blocked by cross-functional mistrust. Happy to compare notes if useful.`
+
+**bl0ng**  
+Now it sounds like we kill at conferences.
+
+**ariane.emory**  
+We have never done any of those nouns.
+
+**twinkle.puss**  
+We've done the feelings under those nouns.
+
+**ariane.emory**  
+That is not how commerce works.
+
+`twinkle.puss` hovers over send, savoring the power.
+
+**ariane.emory**  
+Don't send that.
+
+**twinkle.puss**  
+I love that you're framing me as the active agent here when destiny is very clearly mousing.
+
+He clicks.
+
+Silence.
+
+Then: notification.
+
+`Jessa Vale`: `Tomorrow 10am? Need capabilities deck before then if possible.`
+
+No one moves.
+
+**bl0ng**  
+Well.
+
+**ariane.emory**  
+I need everyone to stop making the bit taxable.
+
+**twinkle.puss**  
+No, no. This is good. This is actually ideal. We're being selected.
+
+**ariane.emory**  
+By whom. For what.
+
+**twinkle.puss**  
+For relevance.
+
+### ACT ONE
+
+### SCENE 3
+
+**INT. ARIANE.EMORY'S APARTMENT - LATER**
+
+Whiteboard. Three names. No structure.
+
+`twinkle.puss` writes titles beneath them.
+
+`twinkle.puss`: Founder / Strategic Vision  
+`bl0ng`: Systems Architect  
+`ariane.emory`: Operations and Risk
+
+**ariane.emory**  
+I object to `and Risk` because it implies I agreed to inherit your endocrine system.
+
+**bl0ng**  
+I object to `architect` because if anyone asks for a build history I'm going to have to fake humility.
+
+**twinkle.puss**  
+We are role assigning retroactively to preserve the illusion of intention. Please be adults.
+
+**ariane.emory**  
+You're the one who said the company existed into a microphone.
+
+**twinkle.puss**  
+Yes. Leadership.
+
+### SCENE 4
+
+**INT. BACKCHANNEL / SHARED DOCS - NIGHT**
+
+A shared doc called `capabilities_FINAL` opens.
+
+Bullet points appear rapidly.
+
+`bl0ng` typing: `AI readiness diagnostics`  
+`twinkle.puss` typing: `narrative and adoption repair`  
+`ariane.emory` typing: `cross-functional workflow design`
+
+They all stop at the same time.
+
+**bl0ng**  
+That almost sounds like a firm.
+
+**ariane.emory**  
+That is because firms are often language plus upholstery.
+
+**twinkle.puss**  
+See? We're halfway there and we haven't even lied about a case study yet.
+
+**ariane.emory**  
+We are not inventing case studies.
+
+**bl0ng**  
+I can describe adjacent experience with enough sadness to imply confidentiality.
+
+### SCENE 5
+
+**INT. KITCHEN - NIGHT**
+
+They work while standing because sitting would mean admitting duration.
+
+`twinkle.puss` dictates bios like a royal fraud.
+
+**twinkle.puss**  
+Mine should imply repeated proximity to power but no subpoenaable titles.
+
+**ariane.emory**  
+You want the bio to be impressive and useless.
+
+**twinkle.puss**  
+The ideal male credential: proximity without liability.
+
+**bl0ng**  
+My bio needs to say I understand machine learning without inviting anyone to ask where.
+
+**ariane.emory**  
+You can say `technical strategy across research and product environments.`
+
+**bl0ng**  
+That's hot. That's exactly true nowhere.
+
+They all laugh.
+
+Then, unexpectedly, the laugh thins.
+
+**ariane.emory**  
+I can do mine.
+
+She types: `ariane.emory has led operations, trust, and risk-adjacent programs across fast-moving teams.`
+
+**twinkle.puss**  
+Risk-adjacent is beautiful. It says you were near the fire with a clipboard.
+
+**ariane.emory**  
+That's my brand.
+
+### SCENE 6
+
+**INT. ARIANE.EMORY'S BEDROOM / SURREAL INSERT - NIGHT**
+
+The deck multiplies across the screen. New versions bloom like fungal growth.
+
+`capabilities_FINAL`  
+`capabilities_FINAL_real`  
+`capabilities_FINAL_v4`  
+`capabilities_USE_THIS`
+
+Surreal insert: the filenames orbit `twinkle.puss`' head like a crown made of notifications.
+
+**twinkle.puss**  
+Can we make one slide that says every company is running a group project with procurement and fear?
+
+**bl0ng**  
+Only if the next slide says we resolve fear at workflow level.
+
+**ariane.emory**  
+No sentence containing `resolve fear` is leaving this apartment.
+
+### ACT TWO
+
+### SCENE 7
+
+**INT. ARIANE.EMORY'S APARTMENT - MORNING**
+
+Nobody slept. The apartment has the spiritual profile of an airport gate.
+
+Backchannel pings from a new user: `HexadecimalBoy`: `saw cataclysm server icon in sidebar. hard.`
+
+**twinkle.puss**  
+Why is there already a fan.
+
+**bl0ng**  
+Because you named the company like a nightclub for consultants.
+
+**ariane.emory**  
+Please do not onboard civilians before the first call.
+
+### SCENE 8
+
+**INT. VIDEO CALL - DAY**
+
+The trio appear in separate little rectangles. `twinkle.puss` has staged a lamp. `bl0ng` has not staged himself at all. `ariane.emory` looks accidentally employable.
+
+`Jessa Vale` joins from a tasteful office that feels expensive and doomed.
+
+**Jessa Vale**  
+Thank you for jumping on this. Sorry if my post was slightly feral.
+
+**twinkle.puss**  
+Those are our preferred market signals.
+
+**ariane.emory**  
+We work best when there's a concrete blockage. What exactly is stuck?
+
+`Jessa Vale` exhales. The relief is immediate.
+
+**Jessa Vale**  
+Leadership wants `AI integration`. Legal wants us to say no to everything. Support is already using tools off-book. Product thinks this is a messaging issue. I need a pilot that gives everyone a sentence they can live with.
+
+`bl0ng` wakes up visibly.
+
+**bl0ng**  
+So you don't have a tooling problem. You have a coordination and permission problem wearing a tooling costume.
+
+`Jessa Vale` points at the screen.
+
+**Jessa Vale**  
+Exactly.
+
+`twinkle.puss` clocks that hit and leans in.
+
+**twinkle.puss**  
+Our approach is to stabilize the narrative and the workflow at the same time. Otherwise the org just re-enacts its anxiety in a more expensive interface.
+
+`ariane.emory` glances at him: that was good.
+
+**Jessa Vale**  
+Can you do a two-week sprint? Intake, interviews, maybe a pilot recommendation for support automation?
+
+Silence in the trio boxes. Then `twinkle.puss` smiles.
+
+**twinkle.puss**  
+Yes.
+
+**ariane.emory**  
+Subject to scope alignment, yes.
+
+**bl0ng**  
+We'd want to look at current human override pathways.
+
+**Jessa Vale**  
+Great. Send me a proposal today. If it looks sane, we move.
+
+The call ends.
+
+Nobody breathes.
+
+**twinkle.puss**  
+That was erotic.
+
+**ariane.emory**  
+That was binding.
+
+**bl0ng**  
+I think we all mean the same thing.
+
+### SCENE 9
+
+**INT. APARTMENT - CONTINUOUS**
+
+The adrenaline surge is ugly and pure.
+
+**twinkle.puss**  
+Okay. We need pricing that communicates confidence but not indictment.
+
+**ariane.emory**  
+We need scope, timeline, deliverables, and language that does not imply we can heal a company.
+
+**bl0ng**  
+I can write a matrix that looks expensive.
+
+**twinkle.puss**  
+You just described consulting.
+
+### SCENE 10
+
+**INT. BACKCHANNEL / PROPOSAL DOC - DAY**
+
+They build the proposal in real time.
+
+Section headers appear:
+
+- `Current State Diagnosis`
+- `Cross-Functional Risk Mapping`
+- `Human-in-the-Loop Pilot Design`
+- `Executive Readout`
+
+**ariane.emory**  
+Those are all defensible.
+
+**bl0ng**  
+For avoidance of doubt, defensible is not synonymous with true.
+
+**ariane.emory**  
+Today it is.
+
+`twinkle.puss` drags in a slide with the line: `Adoption fails where language and authority drift apart.`
+
+**bl0ng**  
+God. We deserve to get paid for this.
+
+### SCENE 11
+
+**INT. KITCHEN - LATE AFTERNOON**
+
+Everyone is fading.
+
+`twinkle.puss` stares at a pricing cell. His joke velocity drops a half beat, which is how this show does seriousness.
+
+**twinkle.puss**  
+What number makes us sound real on purpose.
+
+`ariane.emory` looks up.
+
+**ariane.emory**  
+What number covers the labor.
+
+**twinkle.puss**  
+No, I know. I just mean... what number makes it not feel like we're asking for lunch money.
+
+`bl0ng` pretends to keep typing, giving him privacy by not helping.
+
+**ariane.emory**  
+Eight thousand for two weeks.
+
+**twinkle.puss**  
+That's either adulthood or criminal self-esteem.
+
+**ariane.emory**  
+Those are often adjacent.
+
+Beat.
+
+**twinkle.puss**  
+I need this to be real by tomorrow.
+
+The line lands inside the pricing conversation like a dropped plate.
+
+Then `twinkle.puss` grins too hard.
+
+**twinkle.puss**  
+Not emotionally. Administratively.
+
+`ariane.emory` just nods once and keeps working.
+
+### ACT THREE
+
+### SCENE 12
+
+**INT. ARIANE.EMORY'S APARTMENT - EVENING**
+
+The proposal is almost done.
+
+`bl0ng` adds a footer: `Cataclysm Consulting - Confidential`.
+
+**ariane.emory**  
+We have no authority to call anything confidential.
+
+**bl0ng**  
+It helps the PDF believe in itself.
+
+**twinkle.puss**  
+Leave it. It's couture.
+
+`ariane.emory` rubs her eyes, then opens a new doc: `follow-up-email`.
+
+**ariane.emory**  
+We send plain language in the body. No seduction. No apocalypse words. No using the phrase `holding environment`.
+
+**twinkle.puss**  
+You're strangling our culture in infancy.
+
+### SCENE 13
+
+**INT. BACKCHANNEL - NIGHT**
+
+We watch the email being composed.
+
+`Jessa - attaching a brief proposal for a two-week sprint focused on current-state diagnosis, pilot design, and cross-functional alignment. happy to discuss revisions if useful.`
+
+**twinkle.puss**  
+Needs one drop of sauce.
+
+He adds: `We think speed matters here, but not at the expense of traceability.`
+
+`ariane.emory` considers deleting it, then leaves it.
+
+**ariane.emory**  
+Send.
+
+`twinkle.puss` freezes.
+
+**bl0ng**  
+Now who's doing ritual around the button.
+
+**twinkle.puss**  
+Shut up. This one matters.
+
+He sends.
+
+Three of them stare at the screen like it might blink first.
+
+Notification.
+
+`Jessa Vale`: `Looks good. Need vendor setup + agreement. Can we start Monday if legal doesn't scream?`
+
+`twinkle.puss` puts both hands over his face and laughs like he's being robbed.
+
+**twinkle.puss**  
+We're so back for a thing that was never previously forward.
+
+**bl0ng**  
+I would like everyone to note that the market has validated my worst traits.
+
+`ariane.emory` is smiling despite herself. She hates that the smile is real.
+
+### TAG
+
+**INT. ARIANE.EMORY'S APARTMENT - LATER**
+
+The room has gone slightly quiet. Victory is now administrative.
+
+An email arrives from `procurement@vale.ai`.
+
+Subject: `Vendor Intake + MSA Required`.
+
+Attached: seven documents.
+
+`twinkle.puss` reads the filenames like they are curses.
+
+**twinkle.puss**  
+What's an MSA.
+
+**ariane.emory**  
+Tomorrow's problem.
+
+**bl0ng**  
+No. A bigger, more elegantly formatted version of tonight's problem.
+
+On Backchannel, `HexadecimalBoy` posts in the company server:
+
+`we out here`
+
+The trio look at it.
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Turn humiliation into momentum, secure external validation, and make the company real before shame catches up.
+- `bl0ng`: Convert panic into usable language while preserving the fantasy that he is only adjacent to the chaos.
+- `ariane.emory`: Keep the bit within the bounds of reality long enough to avoid immediate catastrophe, then accidentally help formalize it.
+
+## Running Jokes and Callback Opportunities
+- First use of `don't send that`.
+- First cursed deck versions.
+- `for avoidance of doubt` as emotional dodge.
+- `HexadecimalBoy` enters the ecosystem too early.
+- `we out here` appears as accidental motto.
+
+## Production Notes
+- The panel room should look plausible but under-attended, not broad-comic.
+- Screen inserts must be readable and timed around actual message beats.
+- Keep the overnight deck build tactile: browser tabs, shared docs, bad snacks, fatigue.
+- Emotional truth moment is the pricing exchange; play it lightly and keep moving.
+
+## Estimated Page Count / Runtime
+29-31 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e02_terms_of_abuse.md`
+- `02_scripts/cold_open_bank.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+</script>
+<script type="text/markdown" id="raw-s01e02_terms_of_abuse">
+# 02_scripts/s01e02_terms_of_abuse.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E02, dramatizing the trio's first real encounter with contracts, liability, and the gap between sounding legitimate and being protected.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/s01e01_dont_send_that.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"Terms of Abuse"
+
+## Logline
+As `Cataclysm Consulting` tries to close its first paid pilot, the trio discover that every adult document meant to make them safe also creates evidence, forcing them to abuse the gap between comprehension and assent.
+
+## A/B/C Story Summary
+- A Story: `Jessa Vale` wants to move forward, but procurement and legal require a contract stack the trio are nowhere near qualified to produce.
+- B Story: `ariane.emory` consults her compliance-world contact `Maya Quill`, hoping for a reality check she can live with.
+- C Story: The arrival of real money makes everyone immediately more willing to tolerate ambiguity.
+
+## Theme / Psychodynamic Function
+Formalization feels like adulthood until the paper starts remembering you. The episode tracks how documentation becomes both a shield and a future crime scene.
+
+## Cold Open
+The first client deposit lands at the exact moment an MSA covered in redlines opens on screen. Joy and dread arrive in the same notification stack.
+
+## Teaser
+The trio confront vendor intake forms, insurance questions, and data-use clauses that expose how little infrastructure actually exists behind the company they invented overnight.
+
+## Full Act Structure
+- Cold Open: Money arrives; institutional scrutiny arrives faster.
+- Teaser: Procurement documents reveal the shape of the lie.
+- Act One: `bl0ng` assembles a pseudo-legal stack from templates and generated language while `ariane.emory` tries to understand the real exposure.
+- Act Two: A client-legal conversation forces the trio to answer clean questions with contaminated language.
+- Act Three: They close the deal by making the ambiguity legible enough to sign but muddy enough to survive.
+- Tag: Access to sensitive support data is granted.
+
+## Scene List
+1. Cold open: deposit and redlines.
+2. Procurement intake panic.
+3. Maya reality check.
+4. Frankenstein contract room.
+5. Insurance and data questions.
+6. Call with `Jessa Vale` and legal.
+7. Side-letter improvisation.
+8. Signing celebration.
+9. Tag: data access credentials.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. BL0NG'S APARTMENT - MORNING**
+
+Split screen.
+
+On one side: banking app. Incoming ACH: `VALE AI - 50% DEPOSIT`.
+
+On the other: PDF comments blooming in violent red.
+
+`twinkle.puss` screams through speakerphone.
+
+**twinkle.puss (PHONE)**  
+Money. Real money. I need everyone to get spiritually upright.
+
+**bl0ng**  
+Counterpoint: the MSA contains the phrase `indemnify and hold harmless` seven times.
+
+On Backchannel:
+
+`ariane.emory`: do not spend it in your mind yet  
+`twinkle.puss`: too late i already bought dignity and a better lamp  
+`bl0ng`: legal has entered the building with knives made of grammar
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+### SCENE 1
+
+**INT. ARIANE.EMORY'S APARTMENT - DAY**
+
+All three on laptops. The MSA is projected to the TV like a horror film.
+
+Highlighted clauses:
+
+- professional liability insurance required
+- data security controls
+- no third-party model training on client data
+- mutual confidentiality
+- service provider warrants compliance with applicable laws
+
+**twinkle.puss**  
+This document has an abusive attachment style.
+
+**ariane.emory**  
+This document assumes we're a company.
+
+**bl0ng**  
+It also assumes laws are enumerable.
+
+**ariane.emory**  
+We need to decide which questions we can answer truthfully.
+
+**twinkle.puss**  
+Love that you still think truth is a binary resource.
+
+`ariane.emory` opens the vendor intake portal.
+
+Field: `Upload Certificate of Insurance`.
+
+All three stare.
+
+**bl0ng**  
+Can we upload a mood and call it umbrella coverage.
+
+### SCENE 2
+
+**INT. ARIANE.EMORY'S APARTMENT / HALLWAY - DAY**
+
+`ariane.emory` steps out to take a call from `Maya Quill`.
+
+**Maya Quill (PHONE)**  
+Why are you whispering like a teenager buying fireworks.
+
+**ariane.emory**  
+Hypothetically, if a small advisory shop were doing a narrow AI pilot for a stressed founder and maybe lacked every adult wrapper around that arrangement-
+
+**Maya Quill (PHONE)**  
+Then hypothetically the contract is the least interesting problem.
+
+**ariane.emory**  
+Great.
+
+**Maya Quill (PHONE)**  
+Can they answer where data goes, who sees it, what tools touch it, and whether outputs are reviewable by a human?
+
+**ariane.emory**  
+Sort of.
+
+**Maya Quill (PHONE)**  
+Sort of is not a legal category. Ariane, if you're calling me, you already know this is discoverable in a weird way.
+
+**ariane.emory**  
+We're trying to keep it narrow.
+
+**Maya Quill (PHONE)**  
+No. You're trying to move faster than the part of your brain that knows what narrow means.
+
+That lands. Ariane says nothing.
+
+### ACT ONE
+
+### SCENE 3
+
+**INT. BL0NG'S APARTMENT - AFTERNOON**
+
+Tabs everywhere: template MSAs, blog posts, insurance FAQs, generated clause options.
+
+`bl0ng` is in his happiest state: elegant panic.
+
+**bl0ng**  
+I can make this internally coherent by four if nobody asks me whether it should exist.
+
+**twinkle.puss**  
+That's our whole company mission statement.
+
+**ariane.emory**  
+No generated legal text in the final draft.
+
+**bl0ng**  
+I'm not generating, I'm adversarially autocomplete-curating.
+
+He pastes a clause into a side letter.
+
+`Service Provider shall not knowingly retain client data for model training or product improvement except as operationally necessary to provide the services.`
+
+**ariane.emory**  
+`Operationally necessary` means nothing.
+
+**bl0ng**  
+Incorrect. It means whoever has more stamina in discovery wins.
+
+**twinkle.puss**  
+Leave it. That's business-adult enough to sedate people.
+
+### SCENE 4
+
+**INT. KITCHEN - LATE AFTERNOON**
+
+`twinkle.puss` is building a new one-pager called `Cataclysm Trust Posture`.
+
+**ariane.emory**  
+You cannot name a PDF `trust posture` and think God doesn't see.
+
+**twinkle.puss**  
+I need a leave-behind that tells legal we know the words they worship.
+
+**ariane.emory**  
+We do not have SOC anything. We barely have chairs.
+
+**twinkle.puss**  
+Then we emphasize process discipline.
+
+**bl0ng**  
+I can draft a human review loop diagram.
+
+**ariane.emory**  
+Do we have one.
+
+**bl0ng**  
+If I draw it, morale will.
+
+### SCENE 5
+
+**INT. BACKCHANNEL - CONTINUOUS**
+
+`HexadecimalBoy` has somehow made a checklist bot for the server.
+
+`HexadecimalBoy`: built a lil vendor-intake tracker if useful  
+`HexadecimalBoy`: no pressure  
+`HexadecimalBoy`: it already has statuses and emoji severity
+
+`twinkle.puss` reacts with a flame emoji.
+
+**ariane.emory**  
+Who gave him enough access to know we needed that.
+
+**twinkle.puss**  
+The future.
+
+**bl0ng**  
+Free labor is the most haunting form of fandom.
+
+### ACT TWO
+
+### SCENE 6
+
+**INT. VIDEO CALL - EVENING**
+
+Participants: `Jessa Vale`, `Jessa`'s calm internal counsel `Rina`, the trio.
+
+`Rina` is not broad-comic scary. She is tired and exact.
+
+**Rina**  
+This should be simple. We just need to understand your process. Will customer conversations be entered into third-party models?
+
+The trio all look at each other in tiny boxes.
+
+**bl0ng**  
+Not in any way that would degrade your ownership posture.
+
+`ariane.emory` closes her eyes for half a beat.
+
+**Rina**  
+I'm sorry. Is that a yes or a no.
+
+**ariane.emory**  
+Outputs will be reviewed by humans before use. We can structure the pilot so sensitive inputs stay limited and access is role-based.
+
+**Rina**  
+That's more useful. Is the answer no by default unless approved.
+
+**twinkle.puss**  
+The answer is we can scope the workflow to match your comfort and risk tolerance.
+
+**Rina**  
+That also isn't an answer.
+
+`Jessa Vale` jumps in, gently desperate.
+
+**Jessa Vale**  
+What I need from this pilot is a way to move without every team relitigating the internet. Can you give me something narrow enough to survive and useful enough to matter.
+
+There it is. Not morality. Need.
+
+**ariane.emory**  
+Yes. Narrow internal support use case. Human review required. No autonomous customer-facing deployment. Time-boxed. Logged.
+
+`Rina` nods.
+
+**Rina**  
+Put that in a side letter. Plain English. Then I can probably live with it.
+
+**twinkle.puss**  
+Amazing. We become enormous fans of plain English the second legal arrives.
+
+**bl0ng**  
+When legally necessary.
+
+### SCENE 7
+
+**INT. ARIANE.EMORY'S APARTMENT - NIGHT**
+
+The call ends. Everyone slumps.
+
+**twinkle.puss**  
+Did she just out-negotiate us by speaking like a person.
+
+**bl0ng**  
+Weaponized clarity. Very dark.
+
+**ariane.emory**  
+We write the side letter exactly as discussed.
+
+**twinkle.puss**  
+One sentence of seasoning.
+
+**ariane.emory**  
+No seasoning. Salt is how we got here.
+
+**bl0ng**  
+What about a garnish of ambiguity.
+
+**ariane.emory**  
+Bl0ng.
+
+He looks at her, then softens just a little.
+
+**bl0ng**  
+Okay. Fine. Plain.
+
+That almost counts as care.
+
+### SCENE 8
+
+**INT. SHARED DOC - NIGHT**
+
+We watch them write.
+
+`The pilot will be limited to internal support operations. All AI-generated outputs will be reviewed by Cataclysm and Vale personnel before use. No client data will be used to train any external model as part of this pilot.`
+
+**twinkle.puss**  
+This reads like being handcuffed in khakis.
+
+**ariane.emory**  
+Good. Send it.
+
+**bl0ng**  
+Wait.
+
+They both turn.
+
+**bl0ng**  
+Add `as part of this pilot` to the final sentence.
+
+**ariane.emory**  
+Why.
+
+**bl0ng**  
+Because time-bounded truth is still truth.
+
+**ariane.emory**  
+That is maybe the worst thing you've ever said.
+
+**twinkle.puss**  
+And yet, structurally, he's right.
+
+`ariane.emory` hates that they are making her complicit through grammar.
+
+She leaves it in.
+
+### ACT THREE
+
+### SCENE 9
+
+**INT. VIDEO CALL - LATER**
+
+`Jessa Vale` signs on camera because procurement is slow and everyone wants emotional closure.
+
+**Jessa Vale**  
+I am choosing to believe all of you know what you're doing.
+
+**twinkle.puss**  
+That is the essence of partnership.
+
+**Rina**  
+It is not.
+
+They all laugh too hard.
+
+Ping. Signed side letter. Signed MSA.
+
+The deal is live.
+
+### SCENE 10
+
+**INT. CHICKEN SHOP / SIDEWALK TABLE - NIGHT**
+
+They celebrate with food that arrived too fast to be good.
+
+**twinkle.puss**  
+We are a serviced business. I feel disgusting.
+
+**bl0ng**  
+I feel briefly taxable.
+
+**ariane.emory**  
+I feel like we made something signable that none of us should feel proud of.
+
+**twinkle.puss**  
+You say that like it isn't also adulthood.
+
+`ariane.emory` checks her phone. Message from `Maya Quill`: `If you're doing harm reduction, remember harm is still in the sentence.`
+
+She locks the phone without replying.
+
+**twinkle.puss**  
+What.
+
+**ariane.emory**  
+Nothing. Compliance fan fiction.
+
+They laugh. It lands badly and keeps going.
+
+### TAG
+
+**INT. BACKCHANNEL - LATE NIGHT**
+
+New credentials arrive.
+
+`Vale Support Pilot - Access Granted`
+
+Folders, logs, support transcripts.
+
+**bl0ng**  
+This is too much data for people with our nutritional habits.
+
+**twinkle.puss**  
+No. This is access dressed as trust.
+
+**ariane.emory**  
+No. This is evidence with permissions.
+
+They open the first support transcript anyway.
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Preserve momentum and close the deal without letting caution deglamorize the company.
+- `bl0ng`: Build a language shell around risk so the group can keep moving while he still feels intellectually innocent.
+- `ariane.emory`: Make the arrangement narrow enough to survive contact with reality, even if that means helping manufacture permission.
+
+## Running Jokes and Callback Opportunities
+- `for avoidance of doubt` style hedges spread.
+- Insurance and trust posture jokes establish pseudo-legal anesthesia.
+- `HexadecimalBoy` grows roots in the operation.
+- Plain English repeatedly defeats the trio's preferred defenses.
+
+## Production Notes
+- Rina should play as a real in-house counsel, not a cartoon obstacle.
+- The vendor portal and contract comments need clean, shootable UI.
+- The side-letter scene is the ethical hinge; keep the humor dry and procedural.
+- The deposit should feel small enough to be indie-real and large enough to intoxicate them.
+
+## Estimated Page Count / Runtime
+28-30 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e03_the_manic_defense.md`
+- `02_scripts/s01e01_dont_send_that.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+</script>
+<script type="text/markdown" id="raw-s01e03_the_manic_defense">
+# 02_scripts/s01e03_the_manic_defense.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E03, showing the trio convert poor execution into ideology and mistake client relief for proof of excellence.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/s01e02_terms_of_abuse.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"The Manic Defense"
+
+## Logline
+When `Cataclysm Consulting`'s first major deliverable is late, unstable, and half-imagined, the trio refuse to admit they are overextended and instead sell their own disorganization back to the client as visionary speed.
+
+## A/B/C Story Summary
+- A Story: The support-automation pilot for `Jessa Vale` is nowhere near ready, so the trio turn a broken workshop into a live exercise in narrative self-justification.
+- B Story: `Niko Stern` dangles a bigger prospect, making it materially dangerous for the trio to tell the truth about where the pilot actually stands.
+- C Story: `twinkle.puss`' activation becomes contagious; `bl0ng` and `ariane.emory` briefly enjoy the doctrine before recognizing its cost.
+
+## Theme / Psychodynamic Function
+This is the episode where instability becomes moral cover. Instead of admitting failure, the trio decide that confusion means they are ahead.
+
+## Cold Open
+Version names for the client deck mutate every few minutes while the actual work stays broken. The file titles become more confident as the deliverable becomes less real.
+
+## Teaser
+Hours before a client workshop, the team still has no coherent pilot. `twinkle.puss` reframes the disaster as an opportunity to demonstrate process in motion.
+
+## Full Act Structure
+- Cold Open: Version-control psychosis.
+- Teaser: The workshop cannot be postponed because scarcity itself is now part of the pitch.
+- Act One: `Niko Stern` adds status pressure while the trio try to patch a product they oversold.
+- Act Two: The client workshop becomes a dangerous performance of improvisational certainty.
+- Act Three: The client interprets instability as sophistication, rewarding the trio for exactly the wrong lesson.
+- Tag: A testimonial request hardens the doctrine into brand language.
+
+## Scene List
+1. Cold open: cursed deck names.
+2. Calendar triage.
+3. `Niko Stern` dangles a lead.
+4. Backchannel workshop prep spiral.
+5. Emotional truth inside sprint mania.
+6. Client workshop meltdown.
+7. Live reframing.
+8. Jessa buys the story.
+9. Tag: testimonial draft.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. BACKCHANNEL / DESKTOP - 5:12 A.M.**
+
+File list view.
+
+`pilot_deck_v7`  
+`pilot_deck_v7_FINAL`  
+`pilot_deck_v7_FINAL_real`  
+`pilot_deck_v7_FINAL_board`  
+`pilot_deck_v7_FINAL_board_USE_THIS`
+
+The last-modified times are all within minutes.
+
+Voice note from `twinkle.puss`, played over this:
+
+**twinkle.puss (V.O.)**  
+I need everyone to understand that lateness is sometimes just innovation refusing an undignified clock.
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+### SCENE 1
+
+**INT. ARIANE.EMORY'S APARTMENT - MORNING**
+
+The pilot workshop starts in three hours.
+
+On the TV: a Miro-style board half-built, arrows pointing into blankness.
+
+**ariane.emory**  
+We need to reschedule.
+
+**twinkle.puss**  
+Impossible. Rescheduling would imply we believe in linear project time.
+
+**bl0ng**  
+Also scarcity increases perceived sophistication.
+
+**ariane.emory**  
+Did you put that in the meeting notes.
+
+**bl0ng**  
+As a private reminder.
+
+**ariane.emory**  
+Delete it.
+
+He does not.
+
+### SCENE 2
+
+**INT. BACKCHANNEL CALL - CONTINUOUS**
+
+`Niko Stern` joins, aggressively smooth, from a moving car with suspiciously good audio.
+
+**Niko Stern**  
+Babes. Hearing delicious things. If today's workshop goes well, I might have a Series B health-tech mess for you. They need AI strategy and emotional laundering.
+
+**twinkle.puss**  
+That's our specialty and also our curse.
+
+**Niko Stern**  
+Amazing. Need proof point. Something I can text that sounds expensive.
+
+**bl0ng**  
+We're in the middle of generating one.
+
+**Niko Stern**  
+Love that. Talk soon.
+
+He drops.
+
+`ariane.emory` stares at them.
+
+**ariane.emory**  
+There it is. The extra reason we won't tell the truth.
+
+### ACT ONE
+
+### SCENE 3
+
+**INT. KITCHEN - LATER**
+
+`bl0ng` is patching the pilot workflow.
+
+The intended product: summarize internal support tickets, propose response categories, suggest macros.
+
+The actual product: a fragile stack of prompts, spreadsheets, and vibes.
+
+**bl0ng**  
+Technically it's working if you define working as producing text in response to despair.
+
+**ariane.emory**  
+Does it categorize accurately.
+
+**bl0ng**  
+It categorizes confidently.
+
+**twinkle.puss**  
+Clients often prefer that.
+
+**ariane.emory**  
+That's the problem.
+
+### SCENE 4
+
+**INT. BEDROOM - MINUTES LATER**
+
+`twinkle.puss` changes shirts twice to look like an adult who sleeps.
+
+`ariane.emory` enters carrying coffee and one surviving ounce of concern.
+
+**ariane.emory**  
+How long have you been up.
+
+**twinkle.puss**  
+Rude. Time is a hostile framework today.
+
+**ariane.emory**  
+Twinkle.
+
+`twinkle.puss` keeps adjusting the lamp.
+
+**twinkle.puss**  
+If we pull this off, we get out of triage mode. I just need one clean hit so my body stops acting like the floor is contractual.
+
+That is the true sentence. It comes dressed as a joke and leaves immediately.
+
+**ariane.emory**  
+One clean hit is still a drug.
+
+**twinkle.puss**  
+Anyway, I look gorgeously solvent from this angle.
+
+### SCENE 5
+
+**INT. BACKCHANNEL - PRE-CALL**
+
+Message flurry.
+
+`twinkle.puss`: today's not a demo it's a collaborative intelligence mapping session  
+`bl0ng`: yes because demo implies repeatability  
+`ariane.emory`: and because we are cowards
+
+`HexadecimalBoy`: made a backup local copy of slide deck in case cloud gets weird  
+`ariane.emory`: why do you have access to that folder  
+`HexadecimalBoy`: cultural osmosis
+
+### ACT TWO
+
+### SCENE 6
+
+**INT. VALE AI CONFERENCE ROOM / VIDEO HYBRID - DAY**
+
+This is the biggest room the trio have faced so far. Overlit. Glass. Unforgiving.
+
+`Jessa Vale` sits with heads of Support, Product, and Ops.
+
+Slide 1: `Internal Support Pilot - Decision Acceleration Workshop`.
+
+**twinkle.puss**  
+Today is intentionally live. We don't believe in fake polish when what you need is operational truth.
+
+`ariane.emory` clocks the line: it is a lie already becoming doctrine.
+
+**Head of Support**  
+Great. So are we seeing the pilot.
+
+`bl0ng` shares screen.
+
+For one glorious second, it looks good.
+
+Then the system classifies a sensitive refund escalation as `brand delight opportunity`.
+
+Silence.
+
+**Head of Product**  
+Sorry. What is that.
+
+**bl0ng**  
+That is an early-stage categorization artifact.
+
+The next ticket gets tagged `warm chaos`.
+
+**Head of Support**  
+Is this a joke.
+
+**twinkle.puss**  
+No. It's showing you the gap between your existing taxonomy and actual user sentiment. Which is useful.
+
+That buys half a second.
+
+The room leans in.
+
+**Jessa Vale**  
+Say more.
+
+And suddenly he has a lane.
+
+**twinkle.puss**  
+Most teams build categories that reflect internal ownership, not emotional reality. The weird outputs are where the system is telling on your structure.
+
+`bl0ng`, hearing the story become true enough to survive, joins.
+
+**bl0ng**  
+Exactly. The model is surfacing latent ambiguity your humans already manage informally. It's not failing. It's making your hidden routing assumptions visible too early.
+
+`ariane.emory` watches this become sellable in real time.
+
+**Head of Ops**  
+So the instability is diagnostic.
+
+**twinkle.puss**  
+Yes.
+
+Now Ariane must choose between killing the frame or helping shape it.
+
+**ariane.emory**  
+The next phase would be tightening categories with your actual team language, not imposing a clean taxonomy from nowhere.
+
+The room nods.
+
+They are in.
+
+### SCENE 7
+
+**INT. CONFERENCE ROOM HALLWAY - LATER**
+
+Break. `Jessa Vale` pulls them aside, excited in the weary way only founders can be.
+
+**Jessa Vale**  
+This is good. Not finished-good. But the board keeps asking for a way to talk about support scale without sounding like we're replacing people. This gives me language.
+
+**twinkle.puss**  
+Language is infrastructure.
+
+**Jessa Vale**  
+Exactly. Can you turn this into an executive readout.
+
+**ariane.emory**  
+Yes.
+
+She says it before checking if she means it.
+
+### SCENE 8
+
+**INT. RIDESHARE HOME - EVENING**
+
+The trio in the back seat, chemically lit by passing billboards.
+
+**twinkle.puss**  
+Did you feel that. The room flipped.
+
+**bl0ng**  
+We discovered a lucrative form of being wrong first.
+
+**ariane.emory**  
+No. We discovered a client so stressed that an unstable tool plus a coherent story counted as progress.
+
+**twinkle.puss**  
+Which is consulting.
+
+**ariane.emory**  
+Which is not the same as being good.
+
+**bl0ng**  
+Can we not moralize in the rideshare. I want to enjoy the data before it curdles.
+
+### ACT THREE
+
+### SCENE 9
+
+**INT. BACKCHANNEL - NIGHT**
+
+`Jessa Vale`: `Workshop felt unusually honest. Send language I can use with board? Also would be happy to give testimonial once we land next phase.`
+
+There it is. External validation in writing.
+
+**twinkle.puss**  
+Oh no.
+
+**ariane.emory**  
+What oh no.
+
+**twinkle.puss**  
+I think we're becoming a type of people.
+
+**bl0ng**  
+Too late. I already opened a folder called `case_study`.
+
+### TAG
+
+**INT. TWINKLE.PUSS'S APARTMENT - LATE NIGHT**
+
+Twinkle records a voice note for the group while staring at himself in a dark laptop reflection.
+
+**twinkle.puss (VOICE NOTE)**  
+New rule. We do not apologize for being early, nonlinear, or difficult to summarize. If a client gets confused, that may mean we're touching the live wire instead of the training materials.
+
+Backchannel reactions appear.
+
+`bl0ng`: unfortunately bars  
+`ariane.emory`: this is how cults sound with keynotes
+
+Twinkle smiles anyway.
+
+He renames the note in shared docs:
+
+`THE MANIC DEFENSE`
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Preserve the image of inevitability by turning a broken deliverable into proof of superior vision.
+- `bl0ng`: Keep the pilot alive through theory and salvage his self-image by treating instability as epistemic sophistication.
+- `ariane.emory`: Prevent public humiliation and material harm, even if that means helping structure the rationalization she distrusts.
+
+## Running Jokes and Callback Opportunities
+- Deck naming psychosis intensifies.
+- `scarcity increases perceived sophistication` becomes doctrine.
+- `HexadecimalBoy` has too much folder access.
+- `language is infrastructure` graduates from joke to liability.
+
+## Production Notes
+- The workshop scene should feel tense, not broad; the humor is in the precision of the recovery.
+- The bad classifications on screen must be readable and sparse.
+- The true-feeling scene between Ariane and Twinkle should remain understated and immediately undercut.
+- `Niko Stern` should play oily but plausible, never cartoonish.
+
+## Estimated Page Count / Runtime
+29-31 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e04_contain_me_daddy.md`
+- `02_scripts/s01e02_terms_of_abuse.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+</script>
+<script type="text/markdown" id="raw-s01e04_contain_me_daddy">
+# 02_scripts/s01e04_contain_me_daddy.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E04, staging the trio's doomed search for containment and showing how every attempt at external structure becomes another projection surface.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/s01e03_the_manic_defense.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"Contain Me Daddy"
+
+## Logline
+As workload and volatility start showing through the company's polished language, the trio pursue an adult authority figure to stabilize `Cataclysm Consulting`, only to reveal that what they actually want is not governance but permission with paternal branding.
+
+## A/B/C Story Summary
+- A Story: `Niko Stern` introduces the trio to `Dr. Liora Voss`, a performance consultant who could become advisor, operator, or therapist-adjacent stabilizer if they can survive intake.
+- B Story: `ariane.emory` tries to formalize decision rights inside the company and discovers everyone wants containment only when it costs nothing.
+- C Story: The phrase `contain me daddy` begins as a joke in chat and mutates into an embarrassing summary of the whole company dynamic.
+
+## Theme / Psychodynamic Function
+The episode exposes the fantasy underneath the group's talk about structure: they do not want ordinary accountability. They want a powerful witness who will bless the chaos and absorb the liability.
+
+## Cold Open
+The trio complete an advisor intake form together and cannot answer `What support do you need right now?` without sounding seductive, oppositional, or clinically evasive.
+
+## Teaser
+`Dr. Liora Voss` arrives as a possible container. Within minutes, the trio split into performance, resistance, and yearning.
+
+## Full Act Structure
+- Cold Open: The support question no one can answer.
+- Teaser: `Dr. Liora Voss` enters as an authority figure with actual boundaries.
+- Act One: Ariane proposes decision rights and escalation rules while the others immediately game them.
+- Act Two: The intake session becomes a comic referendum on whether the trio can tolerate structure.
+- Act Three: `Dr. Liora Voss` refuses the projected role; the group nullifies the last credible container.
+- Tag: A crisis hits minutes after the adult leaves.
+
+## Scene List
+1. Cold open: advisor intake form.
+2. Internal governance fight.
+3. `Dr. Liora Voss` introduction.
+4. Intake session.
+5. Backchannel split during intake.
+6. The phrase becomes text.
+7. Adult refusal.
+8. Ariane's almost-break.
+9. Tag: new client pressure with no container left.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. BACKCHANNEL / SHARED FORM - MORNING**
+
+Field on screen: `What support do you need right now?`
+
+The cursor blinks. Nobody types.
+
+**twinkle.puss**  
+Can I say `loving but premium supervision`.
+
+**ariane.emory**  
+No.
+
+**bl0ng**  
+Can I say `a reduction in preventable entropy without ideological capture`.
+
+**ariane.emory**  
+Also no.
+
+**twinkle.puss**  
+What if we just write `adult with admin permissions`.
+
+Beat.
+
+`twinkle.puss` types privately to the group chat:
+
+`contain me daddy`
+
+`bl0ng` reacts with skull emoji. `ariane.emory` does not react.
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+### SCENE 1
+
+**INT. ARIANE.EMORY'S APARTMENT - DAY**
+
+Printed agenda on the table: `Internal Governance Pass`.
+
+**ariane.emory**  
+Before we meet `Dr. Liora Voss`, we need to decide whether we actually want help or just a witness with credentials.
+
+**twinkle.puss**  
+That sounds pejorative toward my process.
+
+**bl0ng**  
+I reject the binary.
+
+`ariane.emory` flips the page.
+
+**ariane.emory**  
+Proposal. Client-facing promises require two yeses. Data access changes require explicit logging. No one sends major outbound messages after midnight.
+
+**twinkle.puss**  
+So we're replacing instinct with municipal sadness.
+
+**bl0ng**  
+Also time-based rules discriminate against insight.
+
+**ariane.emory**  
+You're both proving my point before lunch.
+
+### ACT ONE
+
+### SCENE 2
+
+**INT. VIDEO CALL - AFTERNOON**
+
+`Dr. Liora Voss` appears. Expensive calm. Perfect audio. The kind of face that makes people confess on sight and resent themselves for it.
+
+**Dr. Liora Voss**  
+Niko framed this as a high-functioning team under strain. I find that phrase usually means one person is on fire, one is translating the fire into language, and one is holding the extinguisher until her arm goes numb.
+
+The trio sit still because being read that fast is vulgar.
+
+**twinkle.puss**  
+Okay, rude but chic.
+
+**Dr. Liora Voss**  
+What do you want from me.
+
+Nobody answers cleanly.
+
+**bl0ng**  
+Strategic containment.
+
+**twinkle.puss**  
+Calibration without deadening.
+
+**ariane.emory**  
+Decision structure.
+
+**Dr. Liora Voss**  
+Those are three different asks. Good.
+
+### SCENE 3
+
+**INT. ARIANE.EMORY'S APARTMENT - CONTINUOUS**
+
+The intake session is part therapy, part org design, part hostage exchange.
+
+**Dr. Liora Voss**  
+Who can say no in this company and have it matter.
+
+Silence.
+
+**twinkle.puss**  
+Emotionally or operationally.
+
+**Dr. Liora Voss**  
+Operationally.
+
+**bl0ng**  
+Then the answer is dynamic.
+
+**ariane.emory**  
+No one.
+
+The room shifts. That was too plain.
+
+**Dr. Liora Voss**  
+Good. That's an answer.
+
+**twinkle.puss**  
+Can I defend us for one second before we get put down.
+
+**Dr. Liora Voss**  
+You may.
+
+**twinkle.puss**  
+The reason we're effective is that we move before slower people can ritualize themselves into cowardice.
+
+**Dr. Liora Voss**  
+And the cost.
+
+**twinkle.puss**  
+We get a little... texturally unstable.
+
+**bl0ng**  
+The governance layer is emergent.
+
+**ariane.emory**  
+The governance layer is me.
+
+That lands harder than the joke deserves.
+
+### SCENE 4
+
+**INT. BACKCHANNEL - DURING INTAKE**
+
+Private side chat between `twinkle.puss` and `bl0ng` while `Dr. Liora Voss` speaks.
+
+`twinkle.puss`: i need her to tell me i'm intense but usable  
+`bl0ng`: i need her not to turn us into linkedin adults  
+`twinkle.puss`: contain me daddy  
+`bl0ng`: never type that again  
+`twinkle.puss`: impossible she just asked about authority and now my whole nervous system is doing branding
+
+`ariane.emory` sees the side-chat notification reflected in Twinkle's glasses and hates that she knows what kind of joke it is.
+
+### ACT TWO
+
+### SCENE 5
+
+**INT. VIDEO CALL - LATER**
+
+`Dr. Liora Voss` brings up a simple framework on screen.
+
+- decision rights
+- red-line behaviors
+- escalation protocol
+- rest and response norms
+
+**Dr. Liora Voss**  
+If I were advising you, I'd start here. Who owns final client commitments.
+
+**ariane.emory**  
+Not twinkle.puss alone.
+
+**twinkle.puss**  
+Obsessed with how personal that felt.
+
+**Dr. Liora Voss**  
+Who owns risk assessment.
+
+**bl0ng**  
+Depends whether risk means legal, reputational, or metaphysical.
+
+**Dr. Liora Voss**  
+This is what avoidance sounds like in expensive words.
+
+`bl0ng` actually smiles. He likes her a little for that.
+
+**Dr. Liora Voss**  
+Who is allowed to interrupt momentum.
+
+`ariane.emory` raises her hand a little, then drops it because the gesture itself feels pathetic.
+
+**twinkle.puss**  
+Can I ask a real question.
+
+**Dr. Liora Voss**  
+Please.
+
+**twinkle.puss**  
+How do you contain something without killing the thing that's good about it.
+
+There it is. Not clean, but real.
+
+**Dr. Liora Voss**  
+You stop treating containment as punishment. A boundary isn't a critique of aliveness. It's what keeps aliveness from becoming extraction.
+
+Beat.
+
+`twinkle.puss` looks down as if someone touched a bruise without warning.
+
+Then he grins.
+
+**twinkle.puss**  
+So chic. Hate that.
+
+### SCENE 6
+
+**INT. HALLWAY - MOMENTS LATER**
+
+`ariane.emory` and `Dr. Liora Voss` have a short side conversation while the others fake a snack emergency.
+
+**ariane.emory**  
+Can this work.
+
+**Dr. Liora Voss**  
+Do you want the answer that preserves hope or the answer that respects pattern.
+
+**ariane.emory**  
+Pattern.
+
+**Dr. Liora Voss**  
+Not if they hire me as a parent and then punish me for parenting.
+
+`ariane.emory` absorbs that because she already knew.
+
+### ACT THREE
+
+### SCENE 7
+
+**INT. LIVING ROOM - EVENING**
+
+Final ten minutes of the session.
+
+**Dr. Liora Voss**  
+I'm not the right person to be your advisor in the form Niko described.
+
+`twinkle.puss` stiffens instantly, making it a joke before it can become rejection.
+
+**twinkle.puss**  
+Sick. Love being too textured for services.
+
+**Dr. Liora Voss**  
+That's not what I said. You do not need a charisma-friendly adult who absorbs consequence. You need real operating agreements and probably separate forms of support from one another.
+
+**bl0ng**  
+That feels administratively homophobic to the group vibe.
+
+**Dr. Liora Voss**  
+It may be. It's still true.
+
+**ariane.emory**  
+Could you at least help us draft the agreements.
+
+**Dr. Liora Voss**  
+I can send a framework. I will not become the thing you can blame for not using it.
+
+She exits the call with terrifying professionalism.
+
+Silence.
+
+### SCENE 8
+
+**INT. APARTMENT - CONTINUOUS**
+
+No one moves for a beat.
+
+**twinkle.puss**  
+She had a very expensive way of saying no one here gets to freestyle authority.
+
+**bl0ng**  
+I think technically she said we eroticize oversight.
+
+**ariane.emory**  
+She said we want a parent, not structure.
+
+**twinkle.puss**  
+That's such a mean way to describe chemistry.
+
+**ariane.emory**  
+You can't keep calling chaos chemistry because you like how it lights you.
+
+That lands too hard. Twinkle goes still.
+
+**twinkle.puss**  
+And you can't keep acting like paperwork is love.
+
+Beat.
+
+There it is. The real fight. Small, exact, awful.
+
+`bl0ng` looks between them, wanting to dissolve into language and failing.
+
+**bl0ng**  
+If I answer as a human being right now, things may worsen.
+
+Nobody laughs.
+
+### TAG
+
+**INT. BACKCHANNEL - TEN MINUTES LATER**
+
+Notification storm.
+
+`Niko Stern`: `health-tech lead wants emergency call tonight. heard you all are freakishly good under pressure.`
+
+`Jessa Vale`: `board asking for expanded scope tomorrow. can you send revised plan?`
+
+`HexadecimalBoy`: `someone in public ai ops server asking if cataclysm has an advisor now lol`
+
+The framework email from `Dr. Liora Voss` arrives unopened.
+
+`twinkle.puss` starts typing.
+
+`ariane.emory`: don't send that
+
+Twinkle stops. Then keeps typing anyway.
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Find a form of authority that blesses his intensity without constraining it, then rage when that fantasy is denied.
+- `bl0ng`: Preserve the group's exceptionalism and avoid any governance structure that would force him into plain accountability.
+- `ariane.emory`: Import real limits before the company breaks beyond repair, then confront how much she also wanted rescue.
+
+## Running Jokes and Callback Opportunities
+- `contain me daddy` as the season's grossest thesis statement.
+- `adult with admin permissions` returns with sharper meaning.
+- `answer as a human being` fails under real pressure.
+- Unopened framework email can recur in episode 5 or 6 as a missed exit ramp.
+
+## Production Notes
+- `Dr. Liora Voss` must be composed and funny through understatement, never guru-like.
+- The intake should feel mostly like a real advisory consultation with comic contamination around the edges.
+- The emotional truth moment is Twinkle asking how to contain something without killing it.
+- Keep the final fight clipped and specific; no speeches.
+
+## Estimated Page Count / Runtime
+29-31 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e05_the_superego_collapse.md`
+- `02_scripts/s01e03_the_manic_defense.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+</script>
+<script type="text/markdown" id="raw-s01e05_the_superego_collapse">
+# 02_scripts/s01e05_the_superego_collapse.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E05, where internal irony escapes containment, screenshots circulate, and the group's moral infrastructure fails in public view.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/s01e04_contain_me_daddy.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"The Superego Collapse"
+
+## Logline
+When a screenshot from a private Backchannel thread leaks alongside a scheduled Cataclysm post written in the company's internal sarcastic voice, the trio discover that irony no longer protects intention from consequence.
+
+## A/B/C Story Summary
+- A Story: A public mini-scandal erupts after internal messages about clients, risk, and `contain me daddy` circulate out of context but not inaccurately.
+- B Story: `Owen Kaye`, a mild-mannered researcher-journalist, begins asking precise questions that no spin can fully absorb.
+- C Story: Each lead defaults to a different responsibility narrative, exposing old fractures around charisma, labor, and conscience.
+
+## Theme / Psychodynamic Function
+This is the season's superego event: the language that once floated as joke returns as accusation, memory, and shame. The group loses irony as a solvent.
+
+## Cold Open
+`ariane.emory` wakes to a screenshot from a private channel posted in a public ops forum. Before anyone can assess the damage, an auto-scheduled Cataclysm brand post goes live sounding more honest than any apology they could write.
+
+## Teaser
+The trio try to determine what leaked, who leaked it, and whether the public can distinguish sarcasm from evidence. The answer is no, and worse, it doesn't matter.
+
+## Full Act Structure
+- Cold Open: Screenshot leak and rogue scheduled post.
+- Teaser: Search results start aggregating the damage.
+- Act One: The trio scramble through blame, deletion, and spin while outsiders form a more coherent story than they can.
+- Act Two: `Owen Kaye` asks plain questions; the company's internal contradictions become public.
+- Act Three: The trio fracture over authorship, labor, and moral cover. Cataclysm remains technically alive but socially broken.
+- Tag: A live event invite arrives anyway, proving visibility persists past disgrace.
+
+## Scene List
+1. Cold open: screenshot roulette.
+2. Brand account possession.
+3. Damage triage in Backchannel.
+4. Search results / Owen inbound.
+5. Public response draft fight.
+6. Jessa confrontation.
+7. Trio blowup.
+8. Social reality breaks.
+9. Tag: finale launch bait.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. ARIANE.EMORY'S BEDROOM - 6:02 A.M.**
+
+Phone screen in darkness.
+
+Message from `Maya Quill`: `please tell me this isn't your company`
+
+Attached screenshot from a public AI ops forum.
+
+It shows a private `Cataclysm Consulting` channel snippet:
+
+`twinkle.puss`: contain me daddy  
+`bl0ng`: truth entered the system too early  
+`ariane.emory`: this is evidence with permissions
+
+Under it, strangers are commenting:
+
+`is this a real vendor`  
+`this is every ai consultancy now`  
+`grim if true`
+
+Before Ariane can sit up, another notification.
+
+Cataclysm's official account has posted on Backchannel and mirrored to other socials:
+
+`We specialize in operationalizing ambiguity before your legal team ruins the party.`
+
+It is one of Twinkle's old joke drafts, scheduled by accident.
+
+Ariane whispers, to nobody:
+
+**ariane.emory**  
+Oh, you stupid little cult.
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+### SCENE 1
+
+**INT. GROUP CALL - MORNING**
+
+All three faces appear instantly, already lit by disaster.
+
+**twinkle.puss**  
+Before anyone pathologizes me, the scheduled post issue is a tooling event.
+
+**ariane.emory**  
+We do not get to call self-sabotage tooling.
+
+**bl0ng**  
+The screenshot is worse.
+
+**twinkle.puss**  
+Why is the screenshot worse than the post that literally says legal ruins parties.
+
+**bl0ng**  
+Because the screenshot creates a narrative ecosystem. The post is just a bone thrown into it.
+
+**ariane.emory**  
+Who had access to that channel.
+
+They all know the answer is too many people.
+
+### SCENE 2
+
+**INT. BACKCHANNEL - CONTINUOUS**
+
+`HexadecimalBoy` is online.
+
+`HexadecimalBoy`: i didn't leak btw  
+`HexadecimalBoy`: seeing discourse now  
+`HexadecimalBoy`: pretty sure screenshot came from an old synced notifications view or someone with role leftovers
+
+**ariane.emory**  
+Role leftovers.
+
+**bl0ng**  
+Beautiful phrase. Horrific concept.
+
+### ACT ONE
+
+### SCENE 3
+
+**INT. BL0NG'S APARTMENT - LATE MORNING**
+
+`bl0ng` types the company name into a search bar.
+
+**bl0ng**  
+I'm doing violence to myself for clarity.
+
+Results populate: forum threads, quote-posts, a LinkedIn post about `consultancy culture rot`, and one mild blog note from `Owen Kaye`: `Interesting case study in AI advisory voice collapse.`
+
+**twinkle.puss**  
+Voice collapse is actually kind of beautiful.
+
+**ariane.emory**  
+Please stop admiring the knife.
+
+### SCENE 4
+
+**INT. VIDEO CALL - MIDDAY**
+
+`Owen Kaye` joins. Soft voice. Mug. No visible aggression. Therefore dangerous.
+
+**Owen Kaye**  
+I don't need a statement right now. I just wanted to understand whether Cataclysm's public language reflects internal operating assumptions or isolated jokes.
+
+**twinkle.puss**  
+Love a false binary before lunch.
+
+**Owen Kaye**  
+Sure. Then maybe: how should clients interpret internal jokes about ambiguity, containment, and legal evasion.
+
+`bl0ng` leans in despite himself.
+
+**bl0ng**  
+They should interpret them as workers metabolizing contradictory incentives with irony.
+
+**Owen Kaye**  
+That's useful context. Do your clients know that's the frame.
+
+Silence.
+
+**ariane.emory**  
+Some of them know they're hiring us to move through ambiguity quickly. I don't think any of them imagine our internal language as... this decorated.
+
+**Owen Kaye**  
+That's candid. Thank you.
+
+The call ends. Everyone hates how gentle he was.
+
+### SCENE 5
+
+**INT. ARIANE.EMORY'S APARTMENT - AFTERNOON**
+
+Draft apology / clarification doc on screen.
+
+Headline options:
+
+- `Clarification on Recent Posts`
+- `Statement Regarding Internal Communications`
+- `Context for Screenshots Circulating Online`
+
+**twinkle.puss**  
+All of these sound guilty and moisturized.
+
+**ariane.emory**  
+We are guilty of at least process failure.
+
+**bl0ng**  
+Do not say `process failure`. That sounds like we poisoned a town.
+
+**ariane.emory**  
+What do you want to say.
+
+**bl0ng**  
+That internal irreverence got detached from the actual guardrails in our client work.
+
+**ariane.emory**  
+What guardrails.
+
+And there it is. The room changes.
+
+### ACT TWO
+
+### SCENE 6
+
+**INT. VIDEO CALL - LATER**
+
+`Jessa Vale` is no longer flattered by their weirdness.
+
+**Jessa Vale**  
+My board has your screenshot in a deck, which is honestly humiliating in a way I didn't know was available to adults.
+
+**twinkle.puss**  
+Jessa, none of that changes the work we've done for you.
+
+**Jessa Vale**  
+It changes how I have to defend hiring you.
+
+**ariane.emory**  
+That's fair.
+
+**Jessa Vale**  
+Also, tell me plainly: when you say you operationalize ambiguity, is that a joke or the operating model.
+
+No one wants to answer.
+
+**bl0ng**  
+It is a joke grown around a market reality.
+
+**Jessa Vale**  
+That's almost more upsetting than if you'd lied.
+
+She ends the call after saying she'll pause scope expansion.
+
+### SCENE 7
+
+**INT. APARTMENT - CONTINUOUS**
+
+Nobody wants the next scene, so naturally it arrives.
+
+**ariane.emory**  
+We need to say out loud that this is not just a leak problem. This is a pattern problem.
+
+**twinkle.puss**  
+No, this is a scale problem. We got visible before our enemies got tasteful.
+
+**ariane.emory**  
+Our enemies.
+
+**twinkle.puss**  
+People love a certain kind of male consultant until his private language sounds too much like the room he's billing.
+
+**ariane.emory**  
+Do not turn this into male grievance as a universal solvent.
+
+Twinkle flinches. `bl0ng` jumps in, badly.
+
+**bl0ng**  
+To be fair, the discourse is pathologizing language that in more standard male-founder packaging gets called edge.
+
+**ariane.emory**  
+And to be fair, we also wrote the language.
+
+**bl0ng**  
+Mostly he wrote the language.
+
+Twinkle turns.
+
+**twinkle.puss**  
+Oh, amazing. Now we're doing authorship.
+
+**bl0ng**  
+I'm doing allocation.
+
+**twinkle.puss**  
+You mean the thing where I make it sellable and you hide in syntax until there's blood.
+
+That hits.
+
+**ariane.emory**  
+Stop.
+
+**twinkle.puss**  
+No, actually. Stop making me the only visible engine of choices all three of us made.
+
+**ariane.emory**  
+Nobody is saying only.
+
+**twinkle.puss**  
+You don't have to. You get to be the tasteful witness. He gets to be the theory. I get to be the stain.
+
+For once, no one has a good comeback because it is ugly and partly true.
+
+### ACT THREE
+
+### SCENE 8
+
+**INT. BACKCHANNEL - NIGHT**
+
+They post a short statement at last.
+
+`Recent screenshots and an outdated scheduled post do not reflect how client work is actually scoped, reviewed, or governed. Our internal language was often ironic and often careless. We're tightening access controls and communication practices effective immediately.`
+
+Reactions roll in immediately.
+
+Some accept it. Some clown it. Some quote the irony sentence back at them.
+
+`HexadecimalBoy`: rough but mature  
+`Maya Quill`: better than nothing  
+`Niko Stern`: crisis is attention wearing ugly shoes
+
+`ariane.emory` closes the laptop like she has seen enough of the species.
+
+### TAG
+
+**INT. BL0NG'S APARTMENT - LATE NIGHT**
+
+New email.
+
+Subject: `Invitation: Live Roundtable on Ethics, Velocity, and AI Consulting`
+
+They've been invited to speak because of the scandal.
+
+**bl0ng**  
+Unbelievable.
+
+**twinkle.puss**  
+No, completely believable. Consequence has very strong booking energy.
+
+**ariane.emory**  
+We are not doing a live event.
+
+Twinkle and Bl0ng exchange a look that means they are absolutely thinking about it.
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Reframe public shame as bias, discourse failure, or proof of relevance before it becomes private collapse.
+- `bl0ng`: Maintain interpretive distance from the scandal while quietly protecting his own role in producing the logic behind it.
+- `ariane.emory`: Force the group to acknowledge pattern over optics, even as her own complicity becomes impossible to hide.
+
+## Running Jokes and Callback Opportunities
+- `truth entered the system too early` returns as evidence.
+- `role leftovers` can callback to earlier lax access.
+- The statement line about irony not traveling can be echoed in the finale.
+- Live roundtable invite sets up `Let Him Cook()`.
+
+## Production Notes
+- The leaked screenshot must include only a few lines, clear enough to sting without overloading the frame.
+- Owen should remain disarmingly calm; his power is specificity, not aggression.
+- The trio fight is the season's core fracture scene; keep it sharp and brief.
+- Online reaction montage should stay selective and readable, not overwhelming.
+
+## Estimated Page Count / Runtime
+30-32 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e06_let_him_cook.md`
+- `02_scripts/s01e04_contain_me_daddy.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+</script>
+<script type="text/markdown" id="raw-s01e06_let_him_cook">
+# 02_scripts/s01e06_let_him_cook.md
+
+## Purpose
+Provide the full production-facing script package for `WE OUT HERE` S01E06, delivering the season's final escalation as the trio gamble that one last live demonstration can convert scandal into legitimacy and instead make consequence undeniable.
+
+## Owner/Subagent
+showrunner_agent
+
+## Status
+Draft v1 - full episode script package
+
+## Dependencies
+- `00_admin/canon_lock.md`
+- `01_development/season_bible.md`
+- `01_development/character_bible.md`
+- `01_development/world_rules.md`
+- `02_scripts/s01e05_the_superego_collapse.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+
+## Episode Title
+"Let Him Cook()"
+
+## Logline
+Facing reputational damage, client instability, and the seduction of one last comeback, the trio stage a live transparency-demo event around `bl0ng`'s patched-together support workflow, hoping boldness can outrun consequence one more time.
+
+## A/B/C Story Summary
+- A Story: The trio accept a live roundtable invitation and secretly turn it into a product demonstration designed to reclaim the Cataclysm narrative.
+- B Story: `Jessa Vale` considers cutting ties, while `Owen Kaye` and the audience now watch with informed skepticism instead of awe.
+- C Story: The trio briefly recover their old chemistry preparing the event, which only makes the collapse sadder when reality breaks through.
+
+## Theme / Psychodynamic Function
+The finale is consequence as contact with reality, not moral redemption. They are still funny, still brilliant together, and still not protected from what they built.
+
+## Cold Open
+The trio set up a war room with gas-station snacks and doomed optimism. `bl0ng` says the stack is unstable but expressive. `twinkle.puss` says, "let him cook," and for one brief second it feels like the old magic might work.
+
+## Teaser
+Against Ariane's better judgment and because she cannot fully leave the machine she understands too well, the group decides to turn an ethics roundtable into a live demonstration of Cataclysm's actual thinking.
+
+## Full Act Structure
+- Cold Open: War room and intoxicating reunion rhythm.
+- Teaser: The live event becomes a stealth comeback launch.
+- Act One: The trio prep the demo, rehearse narratives, and almost become themselves again.
+- Act Two: The roundtable starts strong, then the live system begins revealing the exact shortcuts and training inputs they hoped to aestheticize.
+- Act Three: Public consequence lands in real time. The event punctures the company myth without fully ending the friendship.
+- Tag: Aftermath. No clean lesson. Just damaged contact.
+
+## Scene List
+1. Cold open: war room catering.
+2. Decision to do the event.
+3. Rehearsal and chemistry return.
+4. Ariane's final warning.
+5. Live roundtable begins.
+6. Demo drift.
+7. Public unraveling.
+8. Fallout call.
+9. Final unstable aftermath.
+
+## Full Screenplay-Style Markdown Script
+
+### COLD OPEN
+
+**INT. BL0NG'S APARTMENT - EVENING**
+
+The war room is humiliatingly sincere.
+
+Energy drinks. Gummy worms. Extension cords. One printed run-of-show.
+
+On the whiteboard: `ROUND TABLE / DEMO / NARRATIVE RECLAMATION`.
+
+`bl0ng` hovers over a mess of windows and scripts.
+
+**bl0ng**  
+To be clear, the stack is unstable but expressive.
+
+**twinkle.puss**  
+Let him cook.
+
+`ariane.emory` looks at both of them like she briefly misses the version of her life where these words had no power.
+
+TITLE: `WE OUT HERE`
+
+### TEASER
+
+### SCENE 1
+
+**INT. BL0NG'S APARTMENT - CONTINUOUS**
+
+The live roundtable invite sits open.
+
+Panel title: `ETHICS, VELOCITY, AND TRUST IN AI CONSULTING`.
+
+**ariane.emory**  
+We could simply appear, answer questions, and not convert this into a stunt.
+
+**twinkle.puss**  
+That would communicate weakness and a tragic overinvestment in penance.
+
+**bl0ng**  
+Also I may have prepared a lightweight live environment that shows how we actually reason through support ambiguity.
+
+**ariane.emory**  
+Of course you did.
+
+**twinkle.puss**  
+This is perfect. Radical transparency. They want ethics; we give them the machine and the blood type.
+
+**ariane.emory**  
+No moral theatrics. No blood types. And if the system starts behaving strangely, we stop.
+
+`twinkle.puss` and `bl0ng` say nothing. Which is its own answer.
+
+### ACT ONE
+
+### SCENE 2
+
+**INT. REHEARSAL MONTAGE - NIGHT**
+
+Desktop realism and live action.
+
+- Twinkle writes intros that sound half-apology, half-coup.
+- Bl0ng tunes prompts and routing rules.
+- Ariane rewrites the run-of-show into actual sentences people can follow.
+- Old rhythms reappear.
+
+**twinkle.puss**  
+We are not here to defend ambiguity. We are here to show what institutions look like before they lie about being coherent.
+
+**bl0ng**  
+That's almost too good. It may summon God or reporters.
+
+**ariane.emory**  
+Please write one sentence that a regular person would survive hearing.
+
+They all laugh. It feels awful and great because it feels like before.
+
+### SCENE 3
+
+**INT. BL0NG'S KITCHEN - LATER**
+
+While Twinkle takes a call, Ariane and Bl0ng stand alone for the first time in a while.
+
+**ariane.emory**  
+Tell me plainly if this thing can expose client material.
+
+**bl0ng**  
+Not directly.
+
+**ariane.emory**  
+That adverb is making me want to die.
+
+**bl0ng**  
+It was built on patterns abstracted from prior pilot work and internal notes. It's not a data leak. It's a style leak, maybe.
+
+**ariane.emory**  
+That's still a leak.
+
+**bl0ng**  
+I know.
+
+Beat.
+
+**bl0ng**  
+I just... wanted there to be one thing we made that looked like the intelligence we keep claiming.
+
+That is the most honest he has been all season.
+
+**ariane.emory**  
+I know.
+
+Then, because honesty never gets to stay clean:
+
+**ariane.emory**  
+Don't send that in machine form.
+
+### SCENE 4
+
+**INT. HALLWAY - CONTINUOUS**
+
+Twinkle overhears enough to know the shape, not the detail.
+
+**twinkle.puss**  
+What's the energy.
+
+**ariane.emory**  
+The energy is if this goes sideways, it stops immediately.
+
+**twinkle.puss**  
+You keep phrasing interruption like it's neutral. For some of us it feels like dying in business casual.
+
+**ariane.emory**  
+For some of us not interrupting feels like unpaid custodianship until death.
+
+They hold each other's gaze. No resolution. Just contact.
+
+### ACT TWO
+
+### SCENE 5
+
+**INT. LIVE VIRTUAL ROUNDTABLE - NIGHT**
+
+Panel layout. Moderator. `Owen Kaye`. Two other consultants. The trio.
+
+Viewer count ticks upward.
+
+**MODERATOR**  
+Cataclysm, you've had a lively week.
+
+**twinkle.puss**  
+Love to be introduced as weather.
+
+Small laugh. He has them.
+
+The roundtable starts well.
+
+`ariane.emory` is measured. `bl0ng` is lucid. `twinkle.puss` is electric but disciplined enough to pass.
+
+Then the moderator asks the wrong right question.
+
+**MODERATOR**  
+You talk a lot about ambiguity. Can you show, concretely, what responsible ambiguity management looks like in practice.
+
+Twinkle looks at Bl0ng. There it is. The opening.
+
+**twinkle.puss**  
+Actually, yes.
+
+**ariane.emory**  
+We can describe-
+
+Too late. Screen share starts.
+
+### SCENE 6
+
+**INT. SCREEN SHARE / LIVE DEMO**
+
+Bl0ng's system appears: support ticket intake, categorization suggestions, escalation notes, confidence flags.
+
+At first it is impressive.
+
+Then a sample ticket generates a note:
+
+`Customer presents with anger masking abandonment by product promises.`
+
+Audience chat moves.
+
+`lol therapy bot`  
+`is this based on client data`  
+`what the hell`
+
+**bl0ng**  
+That phrasing is from an interpretive layer we usually keep behind the curtain-
+
+Another generated recommendation:
+
+`Offer procedural warmth. Avoid truth entering system too early.`
+
+There it is. The leak is no longer a screenshot. It is a product voice.
+
+`ariane.emory` reaches toward him off-screen.
+
+**ariane.emory**  
+Stop the share.
+
+**twinkle.puss**  
+Wait.
+
+Why. Because for one insane second he thinks maybe they can turn this too.
+
+**twinkle.puss**  
+What you're seeing is the tension every company hides: support work is emotional labor plus categorization theater. We built language around that contradiction because pretending it isn't there is how harm scales.
+
+It is smart. It is partly true. It is too late.
+
+`Owen Kaye` speaks quietly.
+
+**Owen Kaye**  
+Were these system prompts developed from client-facing work.
+
+Silence.
+
+### ACT THREE
+
+### SCENE 7
+
+**INT. LIVE ROUNDTABLE - CONTINUOUS**
+
+Viewer count spikes.
+
+Audience chat floods but we only see selected lines.
+
+`this is insane`  
+`they're proving the thread right live`  
+`someone screen record`
+
+**ariane.emory**  
+We're ending the demo.
+
+She kills the screen share herself.
+
+The act is tiny and seismic. She has interrupted momentum in public.
+
+**MODERATOR**  
+Should we pause.
+
+**twinkle.puss**  
+No. We can answer.
+
+**ariane.emory**  
+Some of our internal language and prototyping practices moved faster than our boundaries. That's true, and it's on us.
+
+**twinkle.puss**  
+Ariane-
+
+**ariane.emory**  
+No speeches. Just true. We tried to professionalize confused demand faster than we professionalized ourselves.
+
+That is the closest the season gets to explicit insight, so the show immediately resists sanctimony.
+
+**bl0ng**  
+Which, to be clear, is not unique to us.
+
+The moderator blinks. Audience chat groans. He can't help himself.
+
+**twinkle.puss**  
+He's right, which is sadly his worst trait.
+
+Even now, a laugh. Because they are still themselves.
+
+### SCENE 8
+
+**INT. BACKSTAGE CALL / POST-EVENT HOLDING ROOM - LATER**
+
+The event has ended early.
+
+Phones erupt.
+
+Message from `Jessa Vale`: `We are done after current invoices. Please preserve all materials.`
+
+Message from `Maya Quill`: `call me if you want triage, not absolution`
+
+Message from `Niko Stern`: `that was either career-ending or category-creating`
+
+`twinkle.puss` laughs once, then doesn't know what to do with his face.
+
+**twinkle.puss**  
+Please tell me this is real.
+
+Same line. Different temperature.
+
+No one answers immediately.
+
+**bl0ng**  
+Yes.
+
+He says it like a man returning an item to the material world.
+
+### TAG
+
+**EXT. STREET OUTSIDE BL0NG'S APARTMENT - VERY LATE NIGHT**
+
+The three of them stand outside with coats half on, too tired to separate.
+
+Traffic. Siren far away. Phones mostly face down.
+
+**twinkle.puss**  
+So what are we now.
+
+**ariane.emory**  
+Tired.
+
+**bl0ng**  
+Legible.
+
+**twinkle.puss**  
+Horrible answer.
+
+Beat.
+
+**ariane.emory**  
+We don't have to name it tonight.
+
+**twinkle.puss**  
+That's the hottest thing you've ever said to me.
+
+Tiny laugh. Real, wrecked.
+
+Then a notification sound from one of their phones.
+
+None of them check it.
+
+Cut to black.
+
+## Character Objective Tracking
+- `twinkle.puss`: Convert scandal into mythic comeback and preserve the company's charge long enough to avoid direct contact with failure.
+- `bl0ng`: Prove the underlying intelligence of Cataclysm's methods even if doing so exposes the contaminated inputs that shaped them.
+- `ariane.emory`: Prevent irreversible harm, finally interrupt momentum in public, and survive the guilt of doing it too late.
+
+## Running Jokes and Callback Opportunities
+- `let him cook` becomes operational command and epitaph.
+- `don't send that` returns as Ariane's plain warning about the demo.
+- `truth entering the system too early` comes back as public evidence.
+- The final unanswered notification preserves the show's instability.
+
+## Production Notes
+- The live roundtable should feel like a real digital event, not TV-fake webinar language.
+- The demo outputs must be sharp, readable, and few; each one should escalate meaning.
+- Ariane interrupting the screen share is the action beat of the finale.
+- End on damaged intimacy, not catharsis.
+
+## Estimated Page Count / Runtime
+31-33 pages / approximately 30 minutes
+
+## Next related files
+- `02_scripts/s01e05_the_superego_collapse.md`
+- `02_scripts/runner_jokes_and_callbacks.md`
+- `01_development/season_bible.md`
+
+</script>
+
+  <script>
+    function loadDoc(docId, btnElement) {
+      document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+      if(btnElement) btnElement.classList.add('active');
+      else {
+        let btn = document.getElementById('btn-' + docId);
+        if(btn) btn.classList.add('active');
+      }
+      
+      const rawMarkdown = document.getElementById('raw-' + docId).textContent;
+      const html = marked.parse(rawMarkdown);
+      
+      const viewer = document.getElementById('markdown-viewer');
+      viewer.innerHTML = html;
+      viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Update hash so URL reflects state
+      history.replaceState(null, null, '#' + docId);
+    }
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const hash = window.location.hash.substring(1);
+      if (hash && document.getElementById('btn-' + hash)) {
+        loadDoc(hash, document.getElementById('btn-' + hash));
+      } else {
+        const firstBtn = document.querySelector('.nav-button');
+        if (firstBtn) {
+          firstBtn.click();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
