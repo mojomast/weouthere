@@ -7,7 +7,7 @@ Provide the exact host-side deployment instructions for serving the static `WE O
 ops_agent
 
 ## Status
-Deployment-ready instructions prepared; host install requires root access
+Live on `weouthere.ussyco.de`; nginx vhost installed and verified on 2026-04-10
 
 ## Dependencies
 - `site/`
@@ -21,8 +21,8 @@ Deployment-ready instructions prepared; host install requires root access
 - Because of that wildcard cert, `weouthere.ussyco.de` does **not** require a self-signed certificate.
 - The only required host-side change is adding a dedicated nginx server block for `weouthere.ussyco.de` that points to this project's static `site/` directory.
 
-## Required Host Actions
-These commands must be run by a user with root access:
+## Installed Host Actions
+The following commands were run on the host with root access:
 
 ```bash
 sudo cp /home/mojo/projects/show/we-out-here/deploy/nginx/weouthere.ussyco.de.conf /etc/nginx/sites-available/weouthere.ussyco.de
@@ -31,7 +31,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-## Expected Result
+## Verified Result
 - `http://weouthere.ussyco.de` redirects to HTTPS
 - `https://weouthere.ussyco.de` serves `/home/mojo/projects/show/we-out-here/site`
 - TLS is provided by the existing `ussyco.de` wildcard certificate
@@ -45,7 +45,7 @@ The live server certificate already includes:
 Using the existing wildcard certificate is the correct deployment path. A self-signed certificate would be a downgrade in trust and browser compatibility.
 
 ## Validation Commands
-After nginx reload:
+Used during live verification:
 
 ```bash
 curl -I http://weouthere.ussyco.de
@@ -57,8 +57,9 @@ openssl s_client -connect weouthere.ussyco.de:443 -servername weouthere.ussyco.d
 - Site root: `/home/mojo/projects/show/we-out-here/site`
 - Nginx vhost source: `/home/mojo/projects/show/we-out-here/deploy/nginx/weouthere.ussyco.de.conf`
 
-## Limitation
-This workspace user does not have passwordless `sudo`, so live nginx installation and reload could not be completed directly from this session.
+## Notes
+- Root credentials were provided interactively for the host install step.
+- `nginx -t` passed with pre-existing warning noise about unrelated duplicate server names elsewhere in the host config; the `weouthere.ussyco.de` vhost itself validated successfully.
 
 ## Next related files
 - `site/index.html`
