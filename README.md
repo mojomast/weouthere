@@ -118,6 +118,12 @@ Three burned-out technologists launch a chaotic AI consultancy from `Backchannel
 - Styles: `site/assets/styles.css`
 - Interactions: `site/assets/app.js`
 
+## Hosting
+- Target hostname: `weouthere.ussyco.de`
+- Deployment guide: `deploy/DEPLOYMENT.md`
+- Nginx vhost: `deploy/nginx/weouthere.ussyco.de.conf`
+- TLS note: the live `ussyco.de` edge already presents a wildcard certificate for `*.ussyco.de`, so no self-signed cert is required for this host
+
 ## Canon Notes
 - `twinkle.puss` is male and uses he/him pronouns
 - The in-world platform is `Backchannel`

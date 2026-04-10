@@ -97,6 +97,7 @@ h3 {
 }
 
 .hero h1 { font-size: clamp(2.4rem, 6vw, 5rem); max-width: 12ch; }
+h1 { font-size: clamp(2.2rem, 5vw, 4.2rem); margin: 0 0 12px; }
 h2 { font-size: clamp(1.8rem, 3vw, 3rem); }
 h3 { font-size: 1.15rem; }
 
@@ -196,6 +197,7 @@ h3 { font-size: 1.15rem; }
   gap: 16px;
 }
 
+.grid.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
@@ -214,6 +216,45 @@ h3 { font-size: 1.15rem; }
 .update-list {
   display: grid;
   gap: 12px;
+}
+
+.stack-list {
+  display: grid;
+  gap: 14px;
+}
+
+.stack-item {
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: rgba(8, 10, 16, 0.45);
+  border-radius: 16px;
+}
+
+.page-hero {
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.faq-list details {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: rgba(8, 10, 16, 0.45);
+}
+
+.faq-list summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.wordmark {
+  color: var(--text);
+  text-decoration: none;
 }
 
 .update-list article { padding: 16px; }
@@ -259,6 +300,7 @@ h3 { font-size: 1.15rem; }
   .two-col,
   .grid.three,
   .grid.four,
+  .grid.six,
   .site-footer {
     grid-template-columns: 1fr;
     display: grid;
